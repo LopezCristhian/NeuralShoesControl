@@ -61,3 +61,5 @@ a {
 }
 
 /* Quita centrado global, solo el index lo tendrá si lo deseas */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
