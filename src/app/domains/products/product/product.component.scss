@@ -1,47 +1,42 @@
-:host {
-  display: block;
-  padding: 2rem 0;
-  background: linear-gradient(135deg, #f0fdfa 0%, #e0e7ff 100%);
-  min-height: 100vh;
-}
+.product-name-hover {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
 
-.p-mb-3 {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1.5rem;
-}
+  .product-image-hover {
+    display: none;
+    position: absolute;
+    left: 110%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 4px;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    min-width: 120px;
+    min-height: 80px;
 
-.p-table {
-  background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  overflow: hidden;
-}
+    img {
+      max-width: 120px;
+      max-height: 80px;
+      display: block;
+    }
+  }
 
-th, td {
-  text-align: center;
+  /* filepath: c:\Users\lasso\OneDrive\Documentos\NeuralShoesControl\src\app\domains\products\product\product.component.scss */
+.color-dot {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid #888;
+  margin-right: 4px;
   vertical-align: middle;
 }
-.p-button {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.5rem;
-  min-height: 2.5rem;
-  font-size: 1rem;
-}
 
-.p-dialog .p-dialog-header {
-  background: #2563eb;
-  color: #fff;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
-}
-
-.p-dialog .p-dialog-content {
-  padding-top: 2rem;
-}
-
-.p-dialog .p-dialog-footer {
-  padding-bottom: 2rem;
+  &:hover .product-image-hover {
+    display: block;
+  }
 }

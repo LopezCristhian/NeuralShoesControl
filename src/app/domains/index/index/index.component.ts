@@ -12,4 +12,13 @@ export class IndexComponent {
   goToProducts() {
     this.router.navigate(['/productos']);
   }
+  goToCategories() {
+  this.router.navigate(['/categorias']);
+}
+  goToBrands() {
+    this.router.navigate(['/marcas']);
+  }
+  goToAdminDemo() {
+    this.router.navigate(['/admin-demo']);
+  }
 }
