@@ -1,0 +1,50 @@
+<div class="container py-4">
+  <h2 class="mb-4">Tienda</h2>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" *ngFor="let product of products">
+          <div class="card h-100 shadow-sm">
+            <img [src]="product.imagen" class="card-img-top" [alt]="product.nombre" style="object-fit:contain; height:140px;">
+            <div class="card-body">
+              <h5 class="card-title">{{ product.nombre }}</h5>
+              <p class="card-text mb-1"><strong>Marca:</strong> {{ product.marca?.nombre }}</p>
+              <p class="card-text mb-1"><strong>Precio:</strong> ${{ product.precio }}</p>
+              <button class="btn btn-success w-100 mt-2" (click)="addToCart(product)">
+                <i class="bi bi-cart-plus"></i> Agregar al carrito
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Carrito -->
+    <div class="col-md-4">
+      <div class="card sticky-top shadow">
+        <div class="card-header bg-primary text-white">
+          <i class="bi bi-cart"></i> Carrito
+        </div>
+        <ul class="list-group list-group-flush">
+          <li *ngFor="let item of cart" class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ item.nombre }}</strong>
+              <div class="small text-muted">x{{ item.quantity }}</div>
+            </div>
+            <div>
+              ${{ item.precio * item.quantity }}
+              <button class="btn btn-sm btn-outline-danger ms-2" (click)="removeFromCart(item)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </li>
+          <li *ngIf="cart.length === 0" class="list-group-item text-center text-muted">
+            El carrito está vacío
+          </li>
+        </ul>
+        <div class="card-footer text-end fw-bold">
+          Total: ${{ getTotal() }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

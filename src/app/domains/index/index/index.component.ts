@@ -18,7 +18,7 @@ export class IndexComponent {
   goToBrands() {
     this.router.navigate(['/marcas']);
   }
-  goToAdminDemo() {
-    this.router.navigate(['/admin-demo']);
+  goToStore() {
+    this.router.navigate(['/tienda']);
   }
 }
