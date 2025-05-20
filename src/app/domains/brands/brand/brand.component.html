@@ -10,11 +10,11 @@
     </thead>
     <tbody>
       <tr *ngFor="let brand of brands">
-        <td>
-          <img *ngIf="brand.imagen" [src]="brand.imagen" alt="Logo marca" style="height: 40px; max-width: 60px; object-fit: contain;">
+        <td class="text-center">
+          <img *ngIf="brand.imagen" [src]="brand.imagen" alt="Logo marca">
         </td>
-        <td>{{ brand.nombre }}</td>
-        <td>{{ brand.descripcion }}</td>
+        <td class="text-start">{{ brand.nombre }}</td>
+        <td class="text-start">{{ brand.descripcion }}</td>
       </tr>
     </tbody>
   </table>

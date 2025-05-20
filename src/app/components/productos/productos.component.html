@@ -1,0 +1,16 @@
+<p-dataView [value]="productos" layout="grid">
+  <ng-template let-producto let-i="index" pTemplate="listItem">
+    <div class="p-grid p-align-center">
+      <div class="p-col-12 p-md-3">
+        <img src="assets/1.jpg" alt="imagen" style="width:100%">
+      </div>
+      <div class="p-col-12 p-md-9">
+        <div class="producto-detalle">
+          <h4>{{ producto.nombre }}</h4>
+          <p>{{ producto.descripcion }}</p>
+          <strong>${{ producto.precio }}</strong>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-dataView>
