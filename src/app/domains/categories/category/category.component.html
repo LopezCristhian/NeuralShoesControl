@@ -1,1 +1,19 @@
-<p>category works!</p>
+<div class="container mt-4">
+  <h2>Categorías</h2>
+  <table class="table table-striped table-bordered">
+    <thead class="table-primary">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cat of categories">
+        <td>{{ cat.id }}</td>
+        <td>{{ cat.nombre }}</td>
+        <td>{{ cat.descripcion }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,11 @@
+.producto-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.producto-card {
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+}

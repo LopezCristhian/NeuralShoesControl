@@ -1,11 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CategoryService } from './category.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-category',
-  imports: [],
   templateUrl: './category.component.html',
-  styleUrl: './category.component.scss'
+  styleUrls: ['./category.component.scss'],
+  standalone: true,
+  imports: [CommonModule]
 })
-export class CategoryComponent {
+export class CategoryComponent implements OnInit {
+  categories: any[] = [];
 
+  constructor(private categoryService: CategoryService) {}
+
+  ngOnInit(): void {
+    this.categoryService.getCategories().subscribe(data => {
+      this.categories = data;
+    });
+  }
 }

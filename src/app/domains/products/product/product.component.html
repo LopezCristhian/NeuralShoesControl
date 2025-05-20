@@ -1,1 +1,86 @@
-<p>product works!</p>
+<div class="mb-3 text-end">
+  <button class="btn btn-primary" (click)="openNew()">
+    <i class="bi bi-plus"></i> Agregar Producto
+  </button>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-primary">
+      <tr>
+        <th>Logo</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Marca</th>
+        <th>Colores</th>
+        <th>Tallas</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>
+          <img *ngIf="product.marca?.imagen" [src]="product.marca.imagen" alt="Logo marca" style="height: 40px; max-width: 60px; object-fit: contain;">
+        </td>
+        <td class="product-name-hover">
+          <span>{{ product.nombre }}</span>
+          <div class="product-image-hover" *ngIf="product.imagen">
+            <img [src]="product.imagen" alt="Imagen producto">
+          </div>
+        </td>
+        <td>${{ product.precio }}</td>
+        <td>{{ product.stock }}</td>
+        <td>{{ product.marca?.nombre || 'Sin marca' }}</td>
+        <td>
+          <span *ngFor="let color of product.colores" class="color-dot" [ngStyle]="{'background': color.nombre}" [title]="color.nombre"></span>
+        </td>
+        <td>
+          <span *ngFor="let talla of product.tallas; let last = last">
+            {{ talla.numero }}<span *ngIf="!last">, </span>
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-warning btn-sm me-2" (click)="editProduct(product)">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="deleteProduct(product)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal Bootstrap -->
+<div class="modal fade show" tabindex="-1" [ngStyle]="{'display': productDialog ? 'block' : 'none', 'background': productDialog ? 'rgba(0,0,0,0.5)' : 'none'}" [class.show]="productDialog" [class.d-block]="productDialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">{{ productDialogTitle }}</h5>
+        <button type="button" class="btn-close" (click)="hideDialog()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="saveProduct()">
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" [(ngModel)]="selectedProduct.nombre" name="nombre" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Precio</label>
+            <input type="number" class="form-control" [(ngModel)]="selectedProduct.precio" name="precio" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Stock</label>
+            <input type="number" class="form-control" [(ngModel)]="selectedProduct.stock" name="stock" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="hideDialog()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="saveProduct()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

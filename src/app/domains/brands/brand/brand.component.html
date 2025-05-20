@@ -1,1 +1,21 @@
-<p>brand works!</p>
+<div class="container mt-4">
+  <h2>Marcas</h2>
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-primary">
+      <tr>
+        <th>Logo</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let brand of brands">
+        <td class="text-center">
+          <img *ngIf="brand.imagen" [src]="brand.imagen" alt="Logo marca">
+        </td>
+        <td class="text-start">{{ brand.nombre }}</td>
+        <td class="text-start">{{ brand.descripcion }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
