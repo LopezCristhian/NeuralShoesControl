@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from './product.service';
+import { ProductService } from '../../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Product } from '../../../models/product.model';
+
 
 @Component({
   selector: 'app-product',
@@ -10,10 +12,13 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule]
 })
 export class ProductComponent implements OnInit {
-  products: any[] = [];
+  //products: any[] = [];
   productDialog = false;
   productDialogTitle = '';
-  selectedProduct: any = {};
+  //selectedProduct: any = {};
+  products: Product[] = [];
+  selectedProduct: Product = {} as Product;
+
 
   constructor(private productService: ProductService) {}
 
@@ -21,14 +26,15 @@ export class ProductComponent implements OnInit {
     this.loadProducts();
   }
 
-  loadProducts() {
-    this.productService.getProducts().subscribe(data => {
-      this.products = data;
-    });
-  }
+loadProducts() {
+  this.productService.getProducts().subscribe((data: Product[]) => {
+    this.products = data;
+  });
+}
+
 
   openNew() {
-    this.selectedProduct = {};
+    this.selectedProduct = {} as Product;
     this.productDialogTitle = 'Agregar Producto';
     this.productDialog = true;
   }

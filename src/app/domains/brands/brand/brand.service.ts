@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class BrandService {
-  private apiUrl = 'http://localhost:8001/api/marcas/';
+  private apiUrl = 'http://localhost:8000/api/marcas/';
 
   constructor(private http: HttpClient) {}
 

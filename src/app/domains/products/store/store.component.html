@@ -8,7 +8,7 @@
             <img *ngIf="product.imagenes?.length" [src]="product.imagenes[0].imagen" class="card-img-top" [alt]="product.nombre" style="object-fit:contain; height:140px;">
             <div class="card-body">
               <h5 class="card-title">{{ product.nombre }}</h5>
-              <p class="card-text mb-1"><strong>Marca:</strong> {{ product.marca?.nombre }}</p>
+              <p class="card-text mb-1"><strong>Marca:</strong> {{ product.marca.nombre }}</p>
               <p class="card-text mb-1"><strong>Precio:</strong> ${{ product.precio }}</p>
               <button class="btn btn-success w-100 mt-2" (click)="addToCart(product)">
                 <i class="bi bi-cart-plus"></i> Agregar al carrito
@@ -18,8 +18,15 @@
         </div>
       </div>
     </div>
+
+    <!-- Botón iniciar sesión -->
+    <div class="col-md-4 mb-3">
+      <button class="btn btn-primary" >
+        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+      </button>
+
     <!-- Carrito -->
-    <div class="col-md-4">
+    <div class="col-md-12">
       <div class="card sticky-top shadow">
         <div class="card-header bg-primary text-white">
           <i class="bi bi-cart"></i> Carrito

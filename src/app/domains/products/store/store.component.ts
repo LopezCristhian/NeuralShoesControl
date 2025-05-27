@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // <-- Importa esto
-import { ProductService } from '../product/product.service';
+import { ProductService } from '../../../services/product.service'; // Asegúrate de que la ruta sea correcta
+import { Product } from '../../../models/product.model'; // Asegúrate de que la ruta sea correcta
 
 @Component({
   selector: 'app-store',
@@ -10,7 +11,7 @@ import { ProductService } from '../product/product.service';
   imports: [CommonModule] // <-- Agrega aquí
 })
 export class StoreComponent implements OnInit {
-  products: any[] = [];
+  products: Product[] = [];
   cart: any[] = [];
 
   constructor(private productService: ProductService) {}
@@ -21,7 +22,7 @@ export class StoreComponent implements OnInit {
     });
   }
 
-  addToCart(product: any) {
+  addToCart(product: Product) {
     const found = this.cart.find((item: any) => item.id === product.id);
     if (found) {
       found.quantity += 1;
@@ -30,7 +31,7 @@ export class StoreComponent implements OnInit {
     }
   }
 
-  removeFromCart(product: any) {
+  removeFromCart(product: Product) {
     this.cart = this.cart.filter(item => item.id !== product.id);
   }
 
