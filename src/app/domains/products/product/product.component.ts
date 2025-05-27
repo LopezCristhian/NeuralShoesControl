@@ -60,7 +60,7 @@ loadProducts() {
     this.productDialog = false;
   }
 
-  deleteProduct(product: any) {
+  deleteProduct(product: Product) {
     this.products = this.products.filter(p => p.id !== product.id);
   }
 }

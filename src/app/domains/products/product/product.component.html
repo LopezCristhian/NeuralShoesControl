@@ -8,7 +8,7 @@
   <table class="table table-bordered table-hover align-middle">
     <thead class="table-primary">
       <tr>
-        <th>Logo</th>
+        <th>Imagen</th>
         <th>Nombre</th>
         <th>Precio</th>
         <th>Stock</th>
@@ -25,15 +25,18 @@
         </td>
         <td class="product-name-hover">
           <span>{{ product.nombre }}</span>
-          <div class="product-image-hover" *ngIf="product.imagenes">
+          <!-- <div class="product-image-hover" *ngIf="product.imagenes">
             <img [src]="product.imagenes[0].imagen" alt="Imagen producto">
-          </div>
+          </div> -->
         </td>
         <td>${{ product.precio }}</td>
         <td>{{ product.stock_total }}</td>
         <td>{{ product.marca.nombre || 'Sin marca' }}</td>
         <td>
-          <span *ngFor="let color of product.colores" class="color-dot" [ngStyle]="{'background': color.nombre}" [title]="color.nombre"></span>
+          <!-- <span *ngFor="let color of product.colores" class="color-dot" [ngStyle]="{'background': color.nombre}" [title]="color.nombre"></span> -->
+          <span *ngFor="let color of product.colores; let last = last">
+            {{ color.nombre }}<span *ngIf="!last">, </span>
+          </span>
         </td>
         <td>
           <span *ngFor="let talla of product.tallas; let last = last">

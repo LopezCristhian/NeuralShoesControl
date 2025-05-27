@@ -23,7 +23,7 @@ export class StoreComponent implements OnInit {
   }
 
   addToCart(product: Product) {
-    const found = this.cart.find((item: any) => item.id === product.id);
+    const found = this.cart.find((item: Product) => item.id === product.id);
     if (found) {
       found.quantity += 1;
     } else {
