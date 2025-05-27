@@ -1,0 +1,35 @@
+<header class="main-header">
+  <div class="container">
+    <div class="logo">
+      <a routerLink="/">MiTienda</a>
+    </div>
+
+    <nav class="main-nav">
+      <ul>
+        <li><a routerLink="/">Inicio</a></li>
+        <li class="dropdown">
+          <a href="#">Categorías</a>
+          <ul class="dropdown-menu">
+            <li><a routerLink="/domains/brands">Nike</a></li>
+            <li><a routerLink="/domains/brands">Adidas</a></li>
+            <li><a routerLink="/domains/brands">Rebook</a></li>
+          </ul>
+        </li>
+        <li><a routerLink="/ofertas">Ofertas</a></li>
+        <li><a routerLink="/contacto">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <form class="search-bar" (submit)="$event.preventDefault()">
+        <input type="text" placeholder="Buscar..." />
+        <button type="submit">🔍</button>
+      </form>
+
+      <a routerLink="/perfil" class="icon-link">👤</a>
+      <a routerLink="/carrito" class="icon-link">
+        🛒 <span class="badge">3</span>
+      </a>
+    </div>
+  </div>
+</header>

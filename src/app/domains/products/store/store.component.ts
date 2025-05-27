@@ -8,7 +8,7 @@ import { Product } from '../../../models/product.model'; // Asegúrate de que la
   templateUrl: './store.component.html',
   styleUrls: ['./store.component.scss'],
   standalone: true,
-  imports: [CommonModule] // <-- Agrega aquí
+  imports: [CommonModule] 
 })
 export class StoreComponent implements OnInit {
   products: Product[] = [];
