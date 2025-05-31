@@ -7,7 +7,7 @@
   z-index: 1000;
 
   .container {
-    max-width: 1200px;
+    max-width: 1300px;
     margin: auto;
     display: flex;
     align-items: center;
@@ -121,4 +121,27 @@
     flex-direction: column;
     align-items: flex-end;
   }
+}
+
+.icon-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+  text-decoration: none;
+  color: #333;
+}
+
+.username {
+  color: #4caf50; /* Verde */
+  font-weight: bold;
+  font-size: 16px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: #e8f5e9;
+  transition: all 0.3s ease;
+}
+
+.username:hover {
+  background-color: #c8e6c9;
 }
