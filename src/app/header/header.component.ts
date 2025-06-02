@@ -87,4 +87,9 @@ export class HeaderComponent {
     return this.keycloak.hasRole(role);
   }
 
+  getUserId(): string | undefined {
+    console.log('UserId:', this.keycloak.getUserId());
+    return this.keycloak.getUserId();
+  }
+
 }

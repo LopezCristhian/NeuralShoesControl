@@ -8,8 +8,8 @@ export const appConfig: ApplicationConfig = {
     provideKeycloak({
       config: {
         url: 'http://localhost:8080',
-        realm: 'neuralshoes_angular',
-        clientId: 'angular_api',
+        realm: 'neuralshoes',
+        clientId: 'angular_app',
       },
       initOptions: {
         onLoad: 'check-sso', // Solo revisa si ya hay sesión activa

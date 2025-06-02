@@ -14,8 +14,8 @@ export class KeycloakService {
   init(): Promise<boolean> {
     this.keycloak = new Keycloak({
       url: 'http://localhost:8080',
-      realm: 'neuralshoes_angular',
-      clientId: 'angular_api',
+      realm: 'neuralshoes',
+      clientId: 'angular_app',
     });
 
     return this.keycloak
@@ -76,7 +76,7 @@ export class KeycloakService {
     return roles ? roles.includes(role) : false;
   }
 
-  //traer id del usuario autenticado
+  // Función que trea el id del usuario autenticado
   getUserId(): string | undefined {
     return this.keycloak?.tokenParsed?.['sub'];
   }
