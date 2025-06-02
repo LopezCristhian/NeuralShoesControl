@@ -11,4 +11,6 @@ import { PieComponent  } from './pie/pie.component';
 })
 export class AppComponent {
   title = 'NeuralShoesControl';
+
+  
 }

@@ -6,6 +6,7 @@ import { CategoryComponent } from './domains/categories/category/category.compon
 import { BrandComponent } from './domains/brands/brand/brand.component';
 import { StoreComponent } from './domains/products/store/store.component';
 import { authRoleGuard } from './guards/auth.guard';
+import { CartComponent } from './domains/products/cart/cart.component';
 
 
 export const routes: Routes = [
@@ -15,5 +16,7 @@ export const routes: Routes = [
   { path: 'categorias', component: CategoryComponent, canActivate: [authRoleGuard], data: { roles: ['administrator'] } },
   { path: 'marcas', component: BrandComponent, canActivate: [authRoleGuard], data: { roles: ['administrator'] } },
   { path: 'tienda', component: StoreComponent},// canActivate: [authGuard] },
-  { path: 'administracion', component: IndexComponent, canActivate: [authRoleGuard], data: { roles: ['administrator'] } }
+  { path: 'administracion', component: IndexComponent, canActivate: [authRoleGuard], data: { roles: ['administrator'] } },
+  { path: 'carrito', component: CartComponent }
+
 ];

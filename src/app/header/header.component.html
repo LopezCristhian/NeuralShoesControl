@@ -6,7 +6,7 @@
     </div>  
 
     <div class="logo">
-      <a routerLink="/">MiTienda</a>
+      <a routerLink="/">Neuralshoes</a>
     </div>
 
     <nav class="main-nav">
@@ -35,13 +35,17 @@
         <button type="submit">🔍</button>
       </form>
 
-      <a routerLink="/carrito" class="icon-link">
-        🛒 <span class="badge">7</span>
-      </a>
+    <a routerLink="/domains/products/cart" class="icon-link">
+      🛒 <span class="badge">{{ cartCount }}</span>
+    </a>
+
       <a routerLink="/perfil" class="icon-link">
         👤 <span *ngIf="username" class="username">Bienvenido, {{ username }}</span>
       </a>
-
+      <!-- Botón de alternar tema oscuro/claro -->
+      <button class="btn btn-darkmode" type="button" (click)="toggleDarkTheme()" title="Alternar modo oscuro">
+        🌓
+      </button>
       <!-- Botón de iniciar sesión -->
       <button class="btn btn-primary btn-sm" *ngIf="!isLoggedInUser()" (click)="login()">Iniciar Sesión</button>
       <!-- Botón de cerrar sesión -->

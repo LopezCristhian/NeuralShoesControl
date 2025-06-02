@@ -1,0 +1,30 @@
+<div class="container py-4">
+  <h2 class="mb-4 text-primary fw-bold">Mi Carrito</h2>
+  <div *ngIf="items.length > 0; else emptyCart">
+    <ul class="list-group mb-3">
+      <li *ngFor="let item of items" class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ item.variacion.producto.nombre }}</strong>
+          <div class="small text-muted">
+            x{{ item.cantidad }} |
+            <span class="badge bg-info text-dark">{{ item.variacion.color.nombre }}</span> |
+            <span class="badge bg-secondary">Talla: {{ item.variacion.talla.numero }}</span>
+          </div>
+        </div>
+        <div>
+          ${{ item.subtotal }}
+        </div>
+      </li>
+    </ul>
+    <div class="d-flex justify-content-between align-items-center">
+      <span class="fw-bold">Total: ${{ getTotal() }}</span>
+      <!-- Aquí puedes poner un botón para finalizar compra -->
+      <button class="btn btn-success">Finalizar compra</button>
+    </div>
+  </div>
+  <ng-template #emptyCart>
+    <div class="alert alert-info text-center">
+      Tu carrito está vacío.
+    </div>
+  </ng-template>
+</div>

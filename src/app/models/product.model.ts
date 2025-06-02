@@ -20,5 +20,5 @@ export interface ProductoCreate {
   descripcion?: string;
   precio: number;
   stock_total?: number;
-  marca_id: string;
+  marca_id: string; // <-- así lo espera el backend
 }

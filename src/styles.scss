@@ -1,25 +1,102 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
-/* Tus estilos globales aquí */
-html, body {
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
-  background: #f8fafc;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  color: #22223b;
+:root {
+  --color-bg: #f8fafc;
+  --color-surface: #fff;
+  --color-surface-alt: #f1f5f9;
+  --color-text: #22223b;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1e40af;
+  --color-header-bg: #fff;
+  --color-header-text: #22223b;
+  --color-card-bg: #fff;
+  --color-card-header-bg: #2563eb;
+  --color-card-header-text: #fff;
+  --color-input-bg: #fff;
+  --color-input-text: #22223b;
+  --color-list-bg: #fff;
+  --color-list-text: #22223b;
+  --color-brand-highlight-bg: #2563eb;
+  --color-brand-highlight-text: #fff;
+  --color-welcome-hero-bg: #fff;
+  --color-welcome-hero-shadow: rgba(0,0,0,0.10);
 }
 
-
-
-html, body {
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
-  background: #f8fafc;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  color: #22223b;
+body.dark-theme {
+  --color-bg: #181818;
+  --color-surface: #23272f;
+  --color-surface-alt: #22223b;
+  --color-text: #f5f5f5;
+  --color-primary: #90caf9;
+  --color-primary-hover: #42a5f5;
+  --color-header-bg: #23272f;
+  --color-header-text: #f5f5f5;
+  --color-card-bg: #23272f;
+  --color-card-header-bg: #181818;
+  --color-card-header-text: #90caf9;
+  --color-input-bg: #23272f;
+  --color-input-text: #f5f5f5;
+  --color-list-bg: #23272f;
+  --color-list-text: #f5f5f5;
+  --color-brand-highlight-bg: #90caf9;
+  --color-brand-highlight-text: #23272f;
+  --color-welcome-hero-bg: #23272f;
+  --color-welcome-hero-shadow: rgba(0,0,0,0.30);
 }
+
+// Fondo y texto global
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+// Tarjetas (Bootstrap)
+.card {
+  background: var(--color-card-bg) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-surface-alt) !important;
+}
+.card-header {
+  background: var(--color-card-header-bg) !important;
+  color: var(--color-card-header-text) !important;
+}
+.card-footer {
+  background: var(--color-card-bg) !important;
+  color: var(--color-text) !important;
+}
+
+// Inputs y formularios
+input, textarea, select {
+  background: var(--color-input-bg) !important;
+  color: var(--color-input-text) !important;
+  border-color: var(--color-surface-alt) !important;
+}
+input::placeholder, textarea::placeholder {
+  color: #aaa !important;
+}
+
+// Listas (Bootstrap)
+.list-group-item {
+  background: var(--color-list-bg) !important;
+  color: var(--color-list-text) !important;
+  border-color: var(--color-surface-alt) !important;
+}
+
+// Dropdowns y menús
+.dropdown-menu {
+  background: var(--color-card-bg) !important;
+  color: var(--color-text) !important;
+}
+
+.header, .main-header {
+  background: var(--color-header-bg) !important;
+  color: var(--color-header-text) !important;
+  transition: background 0.3s, color 0.3s;
+  border-bottom: 1px solid var(--color-surface-alt);
+}
+
+// Otros estilos globales
+body { margin: 0; }
 
 * {
   box-sizing: border-box;
@@ -27,22 +104,23 @@ html, body {
 
 h1, h2, h3, h4, h5 {
   font-weight: 700;
-  color: #2563eb;
+  color: var(--color-primary);
   margin-top: 0;
 }
 
 a {
-  color: #2563eb;
+  color: var(--color-primary);
   text-decoration: none;
   transition: color 0.2s;
   &:hover {
-    color: #1e40af;
+    color: var(--color-primary-hover);
   }
 }
 
 /* Botón especial para el index */
-.p-button.nasty-index {
-  background: linear-gradient(90deg, #2563eb 0%, #9333ea 100%);
+.p-button.nasty-index,
+.btn-gradient.nasty-index {
+  background: linear-gradient(90deg, var(--color-primary) 0%, #9333ea 100%);
   color: #fff;
   border: none;
   box-shadow: 0 4px 16px rgba(37,99,235,0.15), 0 1.5px 6px rgba(147,51,234,0.10);
@@ -53,13 +131,160 @@ a {
   font-weight: 700;
   letter-spacing: 1px;
 }
-
-.p-button.nasty-index:hover {
+.p-button.nasty-index:hover,
+.btn-gradient.nasty-index:hover {
   transform: scale(1.05) rotate(-2deg);
   box-shadow: 0 8px 24px rgba(37,99,235,0.25), 0 3px 12px rgba(147,51,234,0.15);
-  background: linear-gradient(90deg, #9333ea 0%, #2563eb 100%);
+  background: linear-gradient(90deg, #9333ea 0%, var(--color-primary) 100%);
 }
 
-/* Quita centrado global, solo el index lo tendrá si lo deseas */
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// Tablas adaptadas a dark mode y modo claro
+table {
+  background: var(--color-card-bg);
+  color: var(--color-text);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+
+  th, td {
+    background: var(--color-card-bg);
+    color: var(--color-text);
+    border-color: var(--color-surface-alt);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  thead th {
+    background: var(--color-card-header-bg);
+    color: var(--color-card-header-text);
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  tbody tr {
+    transition: background 0.2s;
+    &:hover {
+      background: var(--color-surface-alt);
+    }
+  }
+}
+
+// Botones de acciones en tabla
+.crud-buttons button,
+.edit-btn, .delete-btn {
+  border-radius: 6px;
+  padding: 0.3rem 0.8rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.edit-btn {
+  background: var(--color-primary);
+  color: #fff;
+}
+.delete-btn {
+  background: #e53935;
+  color: #fff;
+}
+
+/* Estilos para el index (bien con modo oscuro) */
+.parallax-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: var(--color-bg);
+  background-image: linear-gradient(135deg, var(--color-primary) 0%, var(--color-bg) 100%);
+  opacity: 0.15;
+}
+
+.welcome-hero {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-welcome-hero-bg);
+  border-radius: 1.5rem;
+  margin: 2rem auto;
+  box-shadow: 0 4px 32px var(--color-welcome-hero-shadow);
+  padding: 2.5rem 1.5rem;
+  max-width: 700px;
+}
+
+.welcome-title {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.brand-highlight {
+  color: var(--color-brand-highlight-text);
+  background: var(--color-brand-highlight-bg);
+  padding: 0.2em 0.5em;
+  border-radius: 0.5em;
+}
+
+.welcome-subtitle {
+  color: var(--color-text);
+  font-size: 1.2rem;
+}
+
+// Modals adaptados a modo claro/oscuro
+.modal-content {
+  background: var(--color-card-bg) !important;
+  color: var(--color-text) !important;
+  border-radius: 1rem;
+  box-shadow: 0 6px 32px rgba(0,0,0,0.12);
+  border: 1px solid var(--color-surface-alt);
+}
+
+.modal-header {
+  background: var(--color-card-header-bg) !important;
+  color: var(--color-card-header-text) !important;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  border-bottom: 1px solid var(--color-surface-alt);
+}
+
+.modal-footer {
+  background: var(--color-card-bg) !important;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  border-top: 1px solid var(--color-surface-alt);
+}
+
+.modal-title {
+  color: var(--color-card-header-text) !important;
+}
+
+.btn-close {
+  filter: invert(0.5);
+}
+
+body.dark-theme .btn-close {
+  filter: invert(1);
+}
+
+// Inputs y selects dentro del modal
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+  background: var(--color-input-bg) !important;
+  color: var(--color-input-text) !important;
+  border-color: var(--color-surface-alt) !important;
+}
+
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.10);
+}
+
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select {
+  border-color: #fff !important;
+}

@@ -21,19 +21,22 @@
     <tbody>
       <tr *ngFor="let product of products">
         <td>
-          <img *ngIf="product.marca?.imagen" [src]="product.marca.imagen" alt="Logo marca" style="height: 40px; max-width: 60px; object-fit: contain;">
+          <img *ngIf="product.imagenes?.length"
+               [src]="product.imagenes[0].imagen"
+               alt="Imagen producto"
+               style="height:40px;object-fit:contain;cursor:pointer;"
+               (click)="openImageModal(product)">
+          <button *ngIf="!product.imagenes?.length"
+                  class="btn btn-link p-0"
+                  (click)="openImageModal(product)">
+            Ver imagen
+          </button>
         </td>
-        <td class="product-name-hover">
-          <span>{{ product.nombre }}</span>
-          <!-- <div class="product-image-hover" *ngIf="product.imagenes">
-            <img [src]="product.imagenes[0].imagen" alt="Imagen producto">
-          </div> -->
-        </td>
+        <td>{{ product.nombre }}</td>
         <td>${{ product.precio }}</td>
         <td>{{ product.stock_total }}</td>
         <td>{{ product.marca.nombre || 'Sin marca' }}</td>
         <td>
-          <!-- <span *ngFor="let color of product.colores" class="color-dot" [ngStyle]="{'background': color.nombre}" [title]="color.nombre"></span> -->
           <span *ngFor="let color of product.colores; let last = last">
             {{ color.nombre }}<span *ngIf="!last">, </span>
           </span>
@@ -44,10 +47,10 @@
           </span>
         </td>
         <td>
-          <button class="btn btn-warning btn-sm me-2" (click)="editProduct(product)">Editar
+          <button class="btn btn-warning btn-sm me-2" (click)="editProduct(product)">
             <i class="bi bi-pencil"></i>
           </button>
-          <button class="btn btn-danger btn-sm" (click)="deleteProduct(product)">Eliminar
+          <button class="btn btn-danger btn-sm" (click)="deleteProduct(product)">
             <i class="bi bi-trash"></i>
           </button>
         </td>
@@ -56,7 +59,7 @@
   </table>
 </div>
 
-<!-- Modal Bootstrap -->
+<!-- Modal Bootstrap para crear/editar producto -->
 <div class="modal fade show" tabindex="-1" [ngStyle]="{'display': productDialog ? 'block' : 'none', 'background': productDialog ? 'rgba(0,0,0,0.5)' : 'none'}" [class.show]="productDialog" [class.d-block]="productDialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -75,14 +78,141 @@
             <input type="number" class="form-control" [(ngModel)]="selectedProduct.precio" name="precio" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Stock</label>
-            <input type="number" class="form-control" [(ngModel)]="selectedProduct.stock_total" name="stock" required min="0">
+            <label class="form-label">Stock total</label>
+            <input type="number" class="form-control" [value]="getStockTotal()" name="stock_total" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Marca</label>
+            <select class="form-select" [(ngModel)]="marcaId" name="marca_id" required>
+              <option value="" disabled selected>Seleccione una marca</option>
+              <option *ngFor="let marca of brands" [value]="marca.id">{{ marca.nombre }}</option>
+            </select>
+          </div>
+
+          <!-- Combinaciones de Talla, Color y Stock -->
+          <div class="mb-3">
+            <label class="form-label">Combinaciones de Talla, Color y Stock</label>
+            <div class="row g-2 mb-2">
+              <div class="col">
+                <select class="form-select" [(ngModel)]="colorId" name="color_id">
+                  <option value="" disabled selected>Color</option>
+                  <option *ngFor="let color of colors" [value]="color.id">{{ color.nombre }}</option>
+                </select>
+              </div>
+              <div class="col">
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="tallaNumero"
+                  name="talla_numero"
+                  placeholder="Talla (ej: 34.5)"
+                >
+              </div>
+              <div class="col">
+                <input type="number" class="form-control" [(ngModel)]="stockCombo" name="stock_combo" placeholder="Stock" min="0">
+              </div>
+              <div class="col-auto">
+                <button type="button" class="btn btn-outline-primary" (click)="addCombo()" [disabled]="!colorId || !tallaNumero || stockCombo == null || stockCombo < 0">+</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Color</th>
+                    <th>Talla</th>
+                    <th>Stock</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let combo of combinaciones; let i = index">
+                    <td>{{ combo.color.nombre }}</td>
+                    <td>{{ combo.talla.numero }}</td>
+                    <td>{{ combo.stock }}</td>
+                    <td>
+                      <button type="button" class="btn btn-danger btn-sm" (click)="removeCombo(i)">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Sección de imágenes solo en edición -->
+          <div class="mb-3" *ngIf="editMode">
+            <label class="form-label">Imágenes actuales del producto</label>
+            <div *ngIf="imagenesModal.length; else noImgsEdit">
+              <span *ngFor="let img of imagenesModal" class="me-2 d-inline-block position-relative">
+                <img [src]="img.imagen" alt="Imagen producto"
+                     style="height: 60px; margin: 0 5px; object-fit: contain;">
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                        style="transform: translate(30%, -30%);"
+                        (click)="eliminarImagenModal(img)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </span>
+            </div>
+            <ng-template #noImgsEdit>
+              <div class="alert alert-warning">No hay imágenes para este producto.</div>
+            </ng-template>
+            <div class="mt-2">
+              <input type="file" (change)="onAddImageToModal($event)" accept="image/*" multiple>
+              <button type="button" class="btn btn-primary btn-sm ms-2"
+                      (click)="uploadImagesToProduct()" [disabled]="!nuevasImagenesModal.length">
+                Agregar imágenes
+              </button>
+              <span *ngFor="let file of nuevasImagenesModal" class="badge bg-secondary ms-1">{{ file.name }}</span>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="hideDialog()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
         </form>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para ver/agregar/eliminar imágenes de producto -->
+<div class="modal fade show" tabindex="-1"
+     [ngStyle]="{'display': imageModalOpen ? 'block' : 'none', 'background': imageModalOpen ? 'rgba(0,0,0,0.5)' : 'none'}"
+     [class.show]="imageModalOpen" [class.d-block]="imageModalOpen">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title">Imágenes del producto</h5>
+        <button type="button" class="btn-close" (click)="closeImageModal()"></button>
+      </div>
+      <div class="modal-body text-center">
+        <ng-container *ngIf="imagenesModal.length; else noImgs">
+          <div class="mb-3">
+            <span *ngFor="let img of imagenesModal" class="me-2 d-inline-block position-relative">
+              <img [src]="img.imagen" alt="Imagen producto"
+                   style="height: 80px; margin: 0 5px; object-fit: contain;">
+              <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0" style="transform: translate(30%, -30%);" (click)="eliminarImagenModal(img)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </span>
+          </div>
+        </ng-container>
+        <ng-template #noImgs>
+          <div class="alert alert-warning">Ups :( No hay imágenes para este producto.</div>
+        </ng-template>
+        <div class="mb-2">
+          <input type="file" (change)="onAddImageToModal($event)" accept="image/*">
+        </div>
+        <div>
+          <span *ngFor="let file of nuevasImagenesModal" class="badge bg-secondary me-1">{{ file.name }}</span>
+        </div>
+      </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="hideDialog()">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="saveProduct()">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="uploadImagesToProduct()" [disabled]="!nuevasImagenesModal.length">Agregar imágenes</button>
+        <button type="button" class="btn btn-secondary" (click)="closeImageModal()">Cerrar</button>
       </div>
     </div>
   </div>

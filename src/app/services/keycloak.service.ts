@@ -76,4 +76,9 @@ export class KeycloakService {
     return roles ? roles.includes(role) : false;
   }
 
+  //traer id del usuario autenticado
+  getUserId(): string | undefined {
+    return this.keycloak?.tokenParsed?.['sub'];
+  }
+
 }

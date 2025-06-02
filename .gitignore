@@ -40,3 +40,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# python thingss
+views.py
+serializers.py
+models.py

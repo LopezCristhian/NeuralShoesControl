@@ -1,20 +1,86 @@
 <div class="container mt-4">
   <h2>Marcas</h2>
+
+  <!-- Botón para mostrar el formulario de agregar -->
+  <div class="mb-3">
+    <button class="btn btn-primary" *ngIf="!editing" (click)="showAddForm = !showAddForm">
+      {{ showAddForm ? 'Cancelar' : 'Agregar nueva marca' }}
+    </button>
+  </div>
+
+  <!-- Formulario para agregar marca -->
+  <form *ngIf="showAddForm && !editing" class="brand-form mb-4" (ngSubmit)="onSubmit()" #brandForm="ngForm">
+    <div>
+      <label>Nombre</label>
+      <input type="text" [(ngModel)]="brand.nombre" name="nombre" required />
+    </div>
+    <div>
+      <label>Descripción</label>
+      <textarea [(ngModel)]="brand.descripcion" name="descripcion"></textarea>
+    </div>
+    <div>
+      <label>Logo</label>
+      <input type="file" (change)="onLogoChange($event)" accept="image/*" />
+      <div class="logo-preview" *ngIf="logoPreview">
+        <img [src]="logoPreview" alt="Logo preview" />
+        <button type="button" (click)="removeLogo()" title="Quitar logo">❌</button>
+      </div>
+    </div>
+    <div class="brand-actions">
+      <button type="submit" class="btn btn-success" [disabled]="!brandForm.form.valid">Crear</button>
+    </div>
+  </form>
+
+  <!-- Tabla de marcas -->
   <table class="table table-bordered table-hover align-middle">
-    <thead class="table-primary">
+    <thead>
       <tr>
         <th>Logo</th>
         <th>Nombre</th>
         <th>Descripción</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let brand of brands">
+        <!-- Celda de logo -->
         <td class="text-center">
-          <img *ngIf="brand.imagen" [src]="brand.imagen" alt="Logo marca">
+          <ng-container *ngIf="editing && editingId === brand.id; else showLogo">
+            <div class="logo-preview" *ngIf="logoPreview">
+              <img [src]="logoPreview" alt="Logo preview" />
+              <button type="button" (click)="removeLogo()" title="Quitar logo">❌</button>
+            </div>
+            <input type="file" (change)="onLogoChange($event)" accept="image/*" />
+          </ng-container>
+          <ng-template #showLogo>
+            <img *ngIf="brand.imagen" [src]="brand.imagen" alt="Logo marca" />
+          </ng-template>
         </td>
-        <td class="text-start">{{ brand.nombre }}</td>
-        <td class="text-start">{{ brand.descripcion }}</td>
+        <!-- Celda de nombre -->
+        <td class="text-start">
+          <ng-container *ngIf="editing && editingId === brand.id; else showNombre">
+            <input type="text" [(ngModel)]="brand.nombre" name="editNombre" required class="form-control" />
+          </ng-container>
+          <ng-template #showNombre>{{ brand.nombre }}</ng-template>
+        </td>
+        <!-- Celda de descripción -->
+        <td class="text-start">
+          <ng-container *ngIf="editing && editingId === brand.id; else showDesc">
+            <textarea [(ngModel)]="brand.descripcion" name="editDescripcion" class="form-control"></textarea>
+          </ng-container>
+          <ng-template #showDesc>{{ brand.descripcion }}</ng-template>
+        </td>
+        <!-- Celda de acciones -->
+        <td>
+          <div class="crud-buttons" *ngIf="!(editing && editingId === brand.id)">
+            <button type="button" class="edit-btn" (click)="editBrand(brand)">✏️</button>
+            <button type="button" class="delete-btn" (click)="deleteBrand(brand)">🗑️</button>
+          </div>
+          <div class="crud-buttons" *ngIf="editing && editingId === brand.id">
+            <button type="button" class="btn btn-success" (click)="onSubmit()">Guardar</button>
+            <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>

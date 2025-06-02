@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { Product } from '../models/product.model';
+import { Product, ProductoCreate } from '../models/product.model';
 import { environment } from './../environments/environment';
 
 @Injectable({
@@ -12,7 +12,6 @@ export class ProductService {
 
   products: Product[] = [];
   selectedProduct: Product = {} as Product;
-
 
   constructor(private http: HttpClient) {}
 
@@ -26,6 +25,18 @@ export class ProductService {
     );
   }
 
+  // Crear producto
+  createProduct(product: Partial<ProductoCreate>): Observable<Product> {
+    return this.http.post<Product>(this.apiUrl, product);
+  }
 
+  // Actualizar producto
+  updateProduct(id: string, product: Partial<ProductoCreate>): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}${id}/`, product);
+  }
 
+  // Eliminar producto
+  deleteProduct(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${id}/`);
+  }
 }
