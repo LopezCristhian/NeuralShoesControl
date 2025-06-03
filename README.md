@@ -51,7 +51,7 @@ cd NeuralShoes
 docker-compose up -d --build
 ```
 
-> **Nota**: Si en Docker existen otros contenedores que estan ejecutandose en el mismo puerto, puedes usar el parámetro `--remove-orphans` para eliminarlos o dternerlos, un ejemplo de contenedor ejectandose por el puerto 8000 es portainer, en ese caso es necesario deternlo con el comando `docker stop portainer`.
+> **Nota**: Si en Docker existen otros contenedores que estan ejecutandose en el mismo puerto, puedes usar el parámetro `--remove-orphans` para eliminarlos o detenerlos, un ejemplo de contenedor ejecutandose por el puerto 8000 es portainer, en ese caso es necesario detenerlo con el comando `docker stop portainer`.
 
 
 Este comando iniciará los siguientes servicios:
