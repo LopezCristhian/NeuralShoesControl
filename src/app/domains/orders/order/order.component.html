@@ -10,7 +10,6 @@
           </h2>
           <p class="text-muted mb-0">
             {{ isAdmin ? 'Administra todos los pedidos del sistema' : 'Consulta el estado de tus pedidos' }}
-
           </p>
         </div>
         
@@ -31,8 +30,8 @@
   </div>
 
   <!-- ✅ Controles rápidos -->
-  <div class="row mb-3">
-    <div class="col-12 d-flex justify-content-between align-items-center">
+  <div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-3">
       <div>
         <button class="btn btn-outline-secondary btn-sm" (click)="refrescarPedidos()">
           <i class="bi bi-arrow-clockwise"></i> Refrescar
@@ -40,62 +39,64 @@
         <span class="ms-2 text-muted">Total: {{ pedidos.length }} pedidos</span>
       </div>
       
-  <div *ngIf="isAdmin" class="btn-group" role="group">
-    <button class="btn btn-info btn-sm" (click)="debugAdministrador()">
-      🐛 Debug
-    </button>
-    <button class="btn btn-success btn-sm" (click)="crearPedidosDePrueba()">
-      🧪 Crear Prueba
-    </button>
-    <button class="btn btn-warning btn-sm" (click)="getEstadisticas()">
-      📊 Stats
-    </button>
-    <button class="btn btn-danger btn-sm" (click)="crearPedidoPruebaSimple()">
-      ⚡ Prueba Directa
-    </button>
-    <!-- ✅ NUEVO BOTÓN -->
-    <button class="btn btn-secondary btn-sm" (click)="simularCliente()">
-      👤 Ver como Cliente
-    </button>
+      <!-- ✅ Botones de admin -->
+      <div *ngIf="isAdmin" class="btn-group" role="group">
+        <button class="btn btn-info btn-sm" (click)="debugAdministrador()">
+          🐛 Debug
+        </button>
+        <button class="btn btn-success btn-sm" (click)="crearPedidosDePrueba()">
+          🧪 Crear Prueba
+        </button>
+        <button class="btn btn-warning btn-sm" (click)="getEstadisticas()">
+          📊 Stats
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="crearPedidoPruebaSimple()">
+          ⚡ Prueba Directa
+        </button>
+        <button class="btn btn-secondary btn-sm" (click)="simularCliente()">
+          👤 Ver como Cliente
+        </button>
+      </div>
+
+      <!-- ✅ Botón para volver a admin cuando está simulando cliente -->
+      <div *ngIf="!isAdmin && hasAdminRole" class="btn-group" role="group">
+        <button class="btn btn-success btn-sm" (click)="volverAAdmin()">
+          👑 Volver a Admin
+        </button>
+      </div>
+    </div>
   </div>
-
-<!-- ✅ Mostrar botón para volver a admin cuando está simulando cliente -->
-<div *ngIf="!isAdmin && hasAdminRole" class="btn-group" role="group">
-  <button class="btn btn-success btn-sm" (click)="volverAAdmin()">
-    👑 Volver a Admin
-  </button>
-</div>
-
-
   
   <!-- ✅ Loading -->
   <div *ngIf="isLoading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
-
   </div>
 
   <!-- ✅ Sin pedidos -->
   <div *ngIf="!isLoading && pedidosFiltrados.length === 0" class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8 col-lg-6">
       <div class="text-center py-5">
-        <i class="bi bi-inbox display-1 text-muted mb-3"></i>
+        <i class="bi bi-inbox display-1 text-muted mb-4"></i>
         <h4 class="text-muted mb-3">No hay pedidos</h4>
         <p class="text-muted mb-4">
           {{ isAdmin ? 'No se encontraron pedidos en el sistema' : 'Aún no has realizado ningún pedido' }}
         </p>
-        <div *ngIf="!isAdmin">
+        <div *ngIf="!isAdmin" class="mb-3">
           <a routerLink="/store" class="btn btn-primary">
             <i class="bi bi-shop"></i> Ir a la Tienda
           </a>
         </div>
-        <div *ngIf="isAdmin">
+        <div *ngIf="isAdmin" class="d-flex gap-2 justify-content-center flex-wrap">
           <button class="btn btn-success" (click)="crearPedidosDePrueba()">
             <i class="bi bi-plus-circle"></i> Crear Pedidos de Prueba
           </button>
-          <button class="btn btn-danger ms-2" (click)="crearPedidoPruebaSimple()">
+          <button class="btn btn-danger" (click)="crearPedidoPruebaSimple()">
             ⚡ Prueba Directa
+          </button>
+          <button class="btn btn-secondary" (click)="simularCliente()">
+            👤 Ver como Cliente
           </button>
         </div>
       </div>
@@ -106,33 +107,33 @@
   <div *ngIf="!isLoading && pedidosFiltrados.length > 0" class="row">
     <div class="col-12">
       <!-- ✅ Estadísticas rápidas para admin -->
-      <div *ngIf="isAdmin" class="row mb-4">
-        <div class="col-md-3">
-          <div class="card bg-warning text-dark">
+      <div *ngIf="isAdmin" class="row mb-5">
+        <div class="col-md-3 mb-3">
+          <div class="card bg-warning text-dark stats-card">
             <div class="card-body text-center">
               <h5>{{ getConteoEstado('Pendiente') }}</h5>
               <small>Pendientes</small>
             </div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card bg-info text-white">
+        <div class="col-md-3 mb-3">
+          <div class="card bg-info text-white stats-card">
             <div class="card-body text-center">
               <h5>{{ getConteoEstado('Enviado') }}</h5>
               <small>Enviados</small>
             </div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card bg-success text-white">
+        <div class="col-md-3 mb-3">
+          <div class="card bg-success text-white stats-card">
             <div class="card-body text-center">
               <h5>{{ getConteoEstado('Entregado') }}</h5>
               <small>Entregados</small>
             </div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card bg-secondary text-white">
+        <div class="col-md-3 mb-3">
+          <div class="card bg-secondary text-white stats-card">
             <div class="card-body text-center">
               <h5>{{ pedidos.length }}</h5>
               <small>Total</small>
@@ -141,10 +142,10 @@
         </div>
       </div>
 
-      <!-- ✅ Tabla/Cards de pedidos -->
-      <div class="row">
+      <!-- ✅ Grid de pedidos mejorado -->
+      <div class="row orders-grid">
         <div *ngFor="let pedido of pedidosFiltrados; trackBy: trackByPedidoId" 
-             class="col-md-6 col-lg-4 mb-4">
+             class="col-md-6 col-xl-4 mb-4">
           <div class="card h-100 shadow-sm border-0">
             <div class="card-header bg-light border-0 d-flex justify-content-between align-items-center">
               <div>
@@ -159,19 +160,19 @@
               <!-- ✅ Info del cliente (solo para admin) -->
               <div *ngIf="isAdmin" class="mb-3">
                 <h6 class="card-subtitle text-muted mb-1">Cliente:</h6>
-                <p class="mb-1">{{ pedido.cliente.nombre }}</p>
+                <p class="mb-1 fw-semibold">{{ pedido.cliente.nombre }}</p>
                 <small class="text-muted">{{ pedido.cliente.correo }}</small>
               </div>
               
               <!-- ✅ Resumen del pedido -->
               <div class="mb-3">
-                <div class="d-flex justify-content-between mb-1">
-                  <span>Productos:</span>
-                  <strong>{{ getTotalItems(pedido) }}</strong>
+                <div class="d-flex justify-content-between mb-2">
+                  <span class="text-muted">Productos:</span>
+                  <strong class="text-primary">{{ getTotalItems(pedido) }}</strong>
                 </div>
                 <div class="d-flex justify-content-between">
-                  <span>Total:</span>
-                  <strong class="text-success">${{ pedido.total | number:'1.0-0' }}</strong>
+                  <span class="text-muted">Total:</span>
+                  <strong class="text-success fs-5">${{ pedido.total | number:'1.0-0' }}</strong>
                 </div>
               </div>
               
@@ -180,21 +181,21 @@
                 <h6 class="card-subtitle text-muted mb-2">Items:</h6>
                 <div class="item-list">
                   <div *ngFor="let item of pedido.items.slice(0, 2)" class="d-flex justify-content-between align-items-center mb-1">
-                    <span class="text-truncate me-2">{{ item.variacion?.producto?.nombre || 'Producto' }}</span>
-                    <small class="text-muted">{{ item.cantidad }}x</small>
+                    <span class="text-truncate me-2">{{ item.variacion.producto.nombre || 'Producto' }}</span>
+                    <small class="text-muted fw-semibold">{{ item.cantidad }}x</small>
                   </div>
                   <div *ngIf="pedido.items.length > 2" class="text-muted">
-                    <small>+ {{ pedido.items.length - 2 }} productos más</small>
+                    <small class="fst-italic">+ {{ pedido.items.length - 2 }} productos más</small>
                   </div>
                   <div *ngIf="pedido.items.length === 0" class="text-muted">
-                    <small>Sin productos especificados</small>
+                    <small class="fst-italic">Sin productos especificados</small>
                   </div>
                 </div>
               </div>
             </div>
             
             <!-- ✅ Acciones del pedido -->
-            <div class="card-footer bg-transparent border-0">
+            <div class="card-footer bg-transparent border-0 pt-0">
               <div class="d-grid gap-2">
                 <!-- ✅ Botón ver detalles -->
                 <button 
@@ -204,9 +205,9 @@
                   <i class="bi bi-eye"></i> Ver Detalles
                 </button>
                 
-                <!-- ✅ Cambiar estado SIMPLIFICADO (sin dropdown complejo) -->
+                <!-- ✅ Cambiar estado para admin -->
                 <div *ngIf="isAdmin" class="btn-group-vertical">
-                  <small class="text-muted mb-1">Cambiar estado:</small>
+                  <small class="text-muted mb-2 text-center">Cambiar estado:</small>
                   <div class="btn-group btn-group-sm" role="group">
                     <button 
                       type="button"
@@ -251,16 +252,22 @@
   </div>
 
   <!-- ✅ Panel de herramientas de administrador -->
-  <div *ngIf="isAdmin" class="row mt-5">
+  <div *ngIf="isAdmin" class="row section-divider">
     <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">🔧 Herramientas de Administrador</h5>
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-tools"></i> 
+            🔧 Herramientas de Administrador
+          </h5>
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-6">
-              <h6>📦 Gestión de Pedidos:</h6>
+            <div class="col-lg-6 mb-4">
+              <h6 class="text-primary mb-3">
+                <i class="bi bi-box-seam"></i> 
+                📦 Gestión de Pedidos:
+              </h6>
               <div class="d-flex flex-wrap gap-2 mb-3">
                 <button class="btn btn-info btn-sm" (click)="debugAdministrador()">
                   🐛 Debug Completo
@@ -274,10 +281,16 @@
                 <button class="btn btn-danger btn-sm" (click)="crearPedidoPruebaSimple()">
                   ⚡ Prueba Directa
                 </button>
+                <button class="btn btn-secondary btn-sm" (click)="simularCliente()">
+                  👤 Ver como Cliente
+                </button>
               </div>
             </div>
-            <div class="col-md-6">
-              <h6>💾 Backup y Limpieza:</h6>
+            <div class="col-lg-6 mb-4">
+              <h6 class="text-primary mb-3">
+                <i class="bi bi-archive"></i> 
+                💾 Backup y Limpieza:
+              </h6>
               <div class="d-flex flex-wrap gap-2 mb-3">
                 <button class="btn btn-primary btn-sm" (click)="exportarPedidos()">
                   📥 Exportar
@@ -292,25 +305,36 @@
             </div>
           </div>
           
-          <!-- ✅ Estadísticas rápidas -->
-          <div class="p-3 bg-light rounded">
+          <!-- ✅ Estadísticas rápidas mejoradas -->
+          <div class="p-4 bg-light rounded-3">
+            <h6 class="text-primary mb-3">
+              <i class="bi bi-graph-up"></i> 
+              📊 Resumen Rápido:
+            </h6>
             <div class="row">
-              <div class="col-6 col-md-3">
-                <strong>Total:</strong> {{ pedidos.length }}
+              <div class="col-6 col-md-3 mb-2">
+                <strong class="text-primary">Total:</strong> 
+                <span class="badge bg-primary ms-1">{{ pedidos.length }}</span>
               </div>
-              <div class="col-6 col-md-3">
-                <strong>Pendientes:</strong> {{ getConteoEstado('Pendiente') }}
+              <div class="col-6 col-md-3 mb-2">
+                <strong class="text-warning">Pendientes:</strong> 
+                <span class="badge bg-warning text-dark ms-1">{{ getConteoEstado('Pendiente') }}</span>
               </div>
-              <div class="col-6 col-md-3">
-                <strong>Enviados:</strong> {{ getConteoEstado('Enviado') }}
+              <div class="col-6 col-md-3 mb-2">
+                <strong class="text-info">Enviados:</strong> 
+                <span class="badge bg-info ms-1">{{ getConteoEstado('Enviado') }}</span>
               </div>
-              <div class="col-6 col-md-3">
-                <strong>Entregados:</strong> {{ getConteoEstado('Entregado') }}
+              <div class="col-6 col-md-3 mb-2">
+                <strong class="text-success">Entregados:</strong> 
+                <span class="badge bg-success ms-1">{{ getConteoEstado('Entregado') }}</span>
               </div>
             </div>
-            <button class="btn btn-sm btn-outline-info mt-2" (click)="getEstadisticas()">
-              📊 Ver Estadísticas Completas
-            </button>
+            <div class="mt-3">
+              <button class="btn btn-outline-info btn-sm" (click)="getEstadisticas()">
+                <i class="bi bi-bar-chart"></i> 
+                📊 Ver Estadísticas Completas
+              </button>
+            </div>
           </div>
         </div>
       </div>

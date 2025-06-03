@@ -62,6 +62,8 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  
+
   // ✅ MÉTODO SIMPLIFICADO para cargar pedidos
 // ✅ MÉTODO SIMPLIFICADO para cargar pedidos
 cargarPedidos() {
