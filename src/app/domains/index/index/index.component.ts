@@ -23,7 +23,12 @@ export class IndexComponent {
   ngOnInit() {
     if (!this.keycloak.isLoggedIn()) {
       this.router.navigate(['/tienda']);
+    }else if (this.keycloak.isLoggedInUser() && this.keycloak.hasRole('administrator')) {
+      this.router.navigate(['/administracion']);  
+    }else {
+      this.router.navigate(['/tienda']);
     }
+      
   }
 
   goToProducts() {

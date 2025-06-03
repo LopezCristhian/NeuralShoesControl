@@ -2,12 +2,13 @@ import { provideKeycloak } from 'keycloak-angular';
 import { provideRouter } from '@angular/router';
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { routes } from './app.routes';
+import { environment } from './environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideKeycloak({
       config: {
-        url: 'http://localhost:8080',
+        url: `${environment.apiBaseUrl}`,
         realm: 'neuralshoes',
         clientId: 'angular_app',
       },

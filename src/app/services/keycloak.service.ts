@@ -1,6 +1,7 @@
 // src/app/services/keycloak.service.ts
 import { Injectable } from '@angular/core';
 import Keycloak, { KeycloakInstance } from 'keycloak-js';
+import { environment } from './../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class KeycloakService {
 
   init(): Promise<boolean> {
     this.keycloak = new Keycloak({
-      url: 'http://localhost:8080',
+      url: `${environment.baseUrlKeycloak}`, // environment.baseUrlKeycloak
       realm: 'neuralshoes',
       clientId: 'angular_app',
     });
@@ -56,7 +57,6 @@ export class KeycloakService {
   isLoggedInUser(): boolean {
     return this.keycloak?.authenticated ?? false;
   }
-
 
   isLoggedIn(): boolean {
     return !!this.keycloak?.token;

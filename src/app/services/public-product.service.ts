@@ -7,8 +7,8 @@ import { environment } from './../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class ProductService {
-  private apiUrl = `${environment.apiBaseUrl}productos/`;
+export class ProductPublicService {
+  private apiUrl = `${environment.apiPublicProductos}productos/`;
 
   products: Product[] = [];
   selectedProduct: Product = {} as Product;
@@ -25,7 +25,4 @@ export class ProductService {
       })))
     );
   }
-
-
-
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // <-- Importa esto
 import { ProductService } from '../../../services/product.service'; // Asegúrate de que la ruta sea correcta
 import { Product } from '../../../models/product.model'; // Asegúrate de que la ruta sea correcta
+import { ProductPublicService } from '../../../services/public-product.service';
 
 @Component({
   selector: 'app-store',

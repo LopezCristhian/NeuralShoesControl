@@ -7,7 +7,6 @@ import { BrandComponent } from './domains/brands/brand/brand.component';
 import { StoreComponent } from './domains/products/store/store.component';
 import { authRoleGuard } from './guards/auth.guard';
 
-
 export const routes: Routes = [
   { path: '', component: IndexComponent },
   { path: 'productos', component: ProductComponent, canActivate: [authRoleGuard], data: { roles: ['administrator'] } },

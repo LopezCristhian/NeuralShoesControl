@@ -20,6 +20,7 @@ keycloakService: any;
     if (this.keycloak.isLoggedInUser()) {
       this.username = this.keycloak.getUsername();
       console.log('Usuario logueado:', this.username);
+      console.log('Usuario autenticado:', this.keycloak.isLoggedInUser(), 'Rol:', this.keycloak.getRole());
     }
   }
   
@@ -57,6 +58,11 @@ keycloakService: any;
   getUserId(): string | undefined {
     console.log('UserId:', this.keycloak.getUserId());
     return this.keycloak.getUserId();
+  }
+
+  isLoggedInUser1(): boolean {
+    console.log('Usuario autenticado:', this.keycloak.isLoggedInUser(), 'Rol:', this.keycloak.getRole());
+    return this.keycloak.isLoggedInUser();
   }
 
 }
