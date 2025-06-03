@@ -1,30 +1,258 @@
 <div class="container py-4">
-  <h2 class="mb-4 text-primary fw-bold">Mi Carrito</h2>
-  <div *ngIf="items.length > 0; else emptyCart">
-    <ul class="list-group mb-3">
-      <li *ngFor="let item of items" class="list-group-item d-flex justify-content-between align-items-center">
+  <!-- Header del carrito -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
         <div>
-          <strong>{{ item.variacion.producto.nombre }}</strong>
-          <div class="small text-muted">
-            x{{ item.cantidad }} |
-            <span class="badge bg-info text-dark">{{ item.variacion.color.nombre }}</span> |
-            <span class="badge bg-secondary">Talla: {{ item.variacion.talla.numero }}</span>
-          </div>
+          <h2 class="fw-bold text-primary mb-1">
+            <i class="bi bi-cart3"></i> Mi Carrito de Compras
+          </h2>
+          <p class="text-muted mb-0">
+            <i class="bi bi-person-circle"></i> 
+            {{ isAuthenticated ? 'Usuario: ' + (userInfo?.preferred_username || 'Cliente') : 'Usuario Invitado' }}
+          </p>
         </div>
-        <div>
-          ${{ item.subtotal }}
+        <div class="text-end">
+          <span class="badge bg-primary fs-6">{{ totalItems }} productos</span>
         </div>
-      </li>
-    </ul>
-    <div class="d-flex justify-content-between align-items-center">
-      <span class="fw-bold">Total: ${{ getTotal() }}</span>
-      <!-- Aquí puedes poner un botón para finalizar compra -->
-      <button class="btn btn-success">Finalizar compra</button>
+      </div>
     </div>
   </div>
-  <ng-template #emptyCart>
-    <div class="alert alert-info text-center">
-      Tu carrito está vacío.
+
+  <!-- Carrito con productos -->
+  <div *ngIf="!isAdmin && items && items.length > 0" class="row">
+    <!-- Lista de productos -->
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">
+            <i class="bi bi-list-ul"></i> Productos en tu carrito
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <div *ngFor="let item of items; trackBy: trackByItemId" class="border-bottom">
+            <div class="row g-0 align-items-center p-3">
+              <!-- Imagen del producto -->
+              <div class="col-md-2">
+                <div class="position-relative">
+                  <img 
+                    [src]="item.variacion.producto.imagenes?.[0]?.imagen || '/assets/placeholder-product.jpg'" 
+                    [alt]="item.variacion.producto.nombre"
+                    class="img-fluid rounded shadow-sm"
+                    style="height: 120px; width: 100%; object-fit: cover;">
+
+                </div>
+              </div>
+              
+              <!-- Información del producto -->
+              <div class="col-md-5">
+                <div class="ps-3">
+                  <h6 class="fw-bold mb-2 text-dark">{{ item.variacion.producto.nombre }}</h6>
+                  <p class="text-muted small mb-1">
+                    <i class="bi bi-tag"></i> {{ item.variacion.producto.marca.nombre }}
+                  </p>
+                  <div class="d-flex gap-3 mb-2">
+                    <span class="badge bg-outline-primary border">
+                      <i class="bi bi-rulers"></i> Talla: {{ item.variacion.talla.numero }}
+                    </span>
+                    <span class="badge bg-outline-secondary border">
+                      <i class="bi bi-palette"></i> {{ item.variacion.color.nombre }}
+                    </span>
+                  </div>
+                  <p class="fw-bold text-success mb-0 fs-5">
+                    ${{ item.variacion.producto.precio | number:'1.0-0' }}
+                  </p>
+                </div>
+              </div>
+              
+              <!-- Controles de cantidad -->
+              <div class="col-md-3">
+                <div class="d-flex flex-column align-items-center">
+                  <label class="form-label small text-muted">Cantidad</label>
+                  <div class="input-group input-group-sm" style="max-width: 120px;">
+                    <button 
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      (click)="updateQuantity(item.id, item.cantidad - 1)"
+                      [disabled]="item.cantidad <= 1">
+                      <i class="bi bi-dash"></i>
+                    </button>
+                    <input 
+                      type="number" 
+                      class="form-control text-center fw-bold"
+                      [value]="item.cantidad"
+                      readonly>
+                    <button 
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      (click)="updateQuantity(item.id, item.cantidad + 1)">
+                      <i class="bi bi-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Subtotal y acciones -->
+              <div class="col-md-2">
+                <div class="text-end">
+                  <p class="fw-bold text-success mb-2 fs-5">
+                    ${{ item.subtotal | number:'1.0-0' }}
+                  </p>
+                  <button 
+                    class="btn btn-outline-danger btn-sm"
+                    (click)="removeItem(item.id)"
+                    title="Eliminar producto">
+                    <i class="bi bi-trash"></i> Eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Acciones del carrito -->
+        <div class="card-footer bg-light">
+          <div class="d-flex justify-content-between align-items-center">
+            <button class="btn btn-outline-warning" (click)="clearCart()">
+              <i class="bi bi-trash3"></i> Vaciar Carrito
+            </button>
+            <a routerLink="/store" class="btn btn-outline-primary">
+              <i class="bi bi-arrow-left"></i> Seguir Comprando
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-  </ng-template>
+    
+    <!-- Resumen del pedido -->
+    <div class="col-lg-4">
+      <div class="card shadow-sm sticky-top" style="top: 100px;">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-receipt"></i> Resumen del Pedido
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- Desglose de precios -->
+          <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal ({{ totalItems }} productos):</span>
+            <span class="fw-bold">${{ total | number:'1.0-0' }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Envío:</span>
+            <span class="text-success fw-bold">Gratis</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Descuentos:</span>
+            <span class="text-success">$0</span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between fs-4 fw-bold text-primary">
+            <span>Total:</span>
+            <span>${{ total | number:'1.0-0' }}</span>
+          </div>
+          
+          <!-- Estado de autenticación -->
+          <div *ngIf="!isAuthenticated" class="alert alert-info mt-3 py-2">
+            <small>
+              <i class="bi bi-info-circle"></i>
+              <strong>¡Inicia sesión para finalizar tu compra!</strong><br>
+              Tu carrito se conservará automáticamente.
+            </small>
+          </div>
+          
+          <!-- Información de envío -->
+          <div class="mt-3 p-3 bg-light rounded">
+            <h6 class="fw-bold mb-2">
+              <i class="bi bi-truck"></i> Información de Envío
+            </h6>
+            <ul class="list-unstyled small mb-0">
+              <li><i class="bi bi-check-circle text-success"></i> Envío gratis en todos los pedidos</li>
+              <li><i class="bi bi-check-circle text-success"></i> Entrega en 3-5 días hábiles</li>
+              <li><i class="bi bi-check-circle text-success"></i> Garantía de 30 días</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Botón de finalizar compra -->
+        <div class="card-footer">
+          <button 
+            class="btn btn-primary w-100 btn-lg"
+            [disabled]="isProcessingOrder"
+            (click)="finalizarCompra()">
+            <span *ngIf="isProcessingOrder">
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              Procesando...
+            </span>
+            <span *ngIf="!isProcessingOrder">
+              <i class="bi bi-credit-card me-2"></i>
+              {{ isAuthenticated ? 'Finalizar Compra' : 'Iniciar Sesión para Comprar' }}
+            </span>
+          </button>
+          
+          <!-- Métodos de pago -->
+          <div class="text-center mt-3">
+            <small class="text-muted">Métodos de pago aceptados:</small><br>
+            <div class="mt-2">
+              <i class="bi bi-credit-card fs-4 me-2 text-primary"></i>
+              <i class="bi bi-paypal fs-4 me-2 text-primary"></i>
+              <i class="bi bi-bank fs-4 me-2 text-primary"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje para administradores -->
+  <div *ngIf="isAdmin" class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow border-0">
+        <div class="card-body text-center py-5">
+          <i class="bi bi-shield-check display-1 text-primary mb-4"></i>
+          <h3 class="fw-bold mb-3">Panel de Administrador</h3>
+          <p class="text-muted mb-4">
+            Como administrador, tienes acceso al panel de gestión en lugar del carrito de compras.
+          </p>
+          <div class="d-flex gap-3 justify-content-center">
+            <a routerLink="/admin" class="btn btn-primary btn-lg">
+              <i class="bi bi-gear me-2"></i> Panel de Administración
+            </a>
+            <a routerLink="/store" class="btn btn-outline-primary btn-lg">
+              <i class="bi bi-shop me-2"></i> Ver Tienda
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carrito vacío -->
+  <div *ngIf="!isAdmin && (!items || items.length === 0)" class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow border-0">
+        <div class="card-body text-center py-5">
+          <i class="bi bi-cart-x display-1 text-muted mb-4"></i>
+          <h3 class="text-muted mb-3">Tu carrito está vacío</h3>
+          <p class="text-muted mb-4">
+            ¡Explora nuestra increíble colección de zapatos y encuentra tu par perfecto!
+          </p>
+          <a routerLink="/store" class="btn btn-primary btn-lg">
+            <i class="bi bi-shop me-2"></i> Explorar Tienda
+          </a>
+          
+          <!-- Productos recomendados -->
+          <div class="mt-4">
+            <h6 class="text-muted">¿No sabes qué buscar?</h6>
+            <div class="d-flex flex-wrap gap-2 justify-content-center mt-3">
+              <span class="badge bg-light text-dark border">Nike</span>
+              <span class="badge bg-light text-dark border">Adidas</span>
+              <span class="badge bg-light text-dark border">Jordan</span>
+              <span class="badge bg-light text-dark border">Ofertas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

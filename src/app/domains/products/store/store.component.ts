@@ -108,23 +108,37 @@ export class StoreComponent implements OnInit {
     return this.preCart.reduce((sum, item) => sum + item.producto.precio * item.cantidad, 0);
   }
 
-  // Confirmar productos y actualizar el carrito global
-  confirmarCarrito() {
-    // Transforma los preCart a ItemCarrito (puedes adaptar según tu modelo real)
-    const items: ItemCarrito[] = this.preCart.map(item => ({
-      id: '', // El backend lo asignará si lo necesitas
-      carrito: '', // Puedes asignar el id del carrito si lo tienes
-      variacion: {
-        id: '', // Si tienes el id de la variación, úsalo
-        producto: item.producto,
-        talla: { id: item.tallaId, numero: item.tallaNumero },
-        color: { id: item.colorId, nombre: item.colorNombre },
-        stock: 0 // No relevante aquí
-      },
-      cantidad: item.cantidad,
-      subtotal: item.producto.precio * item.cantidad
-    }));
-    this.cartState.setItems(items);
-    this.preCart = [];
+confirmarCarrito() {
+  if (this.preCart.length === 0) {
+    alert('No hay productos para agregar al carrito');
+    return;
   }
+
+  // Transforma los preCart a ItemCarrito
+  const items: ItemCarrito[] = this.preCart.map(item => ({
+    id: '', // Se generará automáticamente
+    carrito: '', // Se asignará automáticamente
+    variacion: {
+      id: `${item.producto.id}-${item.colorId}-${item.tallaId}`,
+      producto: item.producto,
+      talla: { id: item.tallaId, numero: item.tallaNumero },
+      color: { id: item.colorId, nombre: item.colorNombre },
+      stock: 0
+    },
+    cantidad: item.cantidad,
+    subtotal: item.producto.precio * item.cantidad
+  }));
+
+  // Agregar items al carrito usando el nuevo método
+  items.forEach(item => this.cartState.addItem(item));
+  
+  // Limpiar el pre-carrito
+  this.preCart = [];
+  
+  // Mostrar mensaje de éxito
+  alert(`${items.length} producto(s) agregado(s) al carrito correctamente`);
+  
+  console.log('Carrito actualizado:', this.cartState.getCartData());
+}
+
 }

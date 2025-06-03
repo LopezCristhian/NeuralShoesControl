@@ -1,4 +1,3 @@
-// src/app/services/keycloak.service.ts
 import { Injectable } from '@angular/core';
 import Keycloak, { KeycloakInstance } from 'keycloak-js';
 
@@ -6,9 +5,6 @@ import Keycloak, { KeycloakInstance } from 'keycloak-js';
   providedIn: 'root',
 })
 export class KeycloakService {
-  static isLoggedInUser(): boolean {
-    throw new Error('Method not implemented.');
-  }
   private keycloak!: KeycloakInstance;
 
   init(): Promise<boolean> {
@@ -20,13 +16,12 @@ export class KeycloakService {
 
     return this.keycloak
       .init({
-        onLoad: 'check-sso', // No redirige automáticamente al login
+        onLoad: 'check-sso',
         silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
         pkceMethod: 'S256',
-        checkLoginIframe: false, // Puedes ponerlo en false temporalmente
+        checkLoginIframe: false,
       })
       .then(authenticated => {
-        console.log('[Keycloak] Authenticated:', authenticated);
         console.log('[Keycloak] Authenticated:', authenticated);
         console.log('[Keycloak] Token:', this.keycloak.token);
         return authenticated;
@@ -39,6 +34,34 @@ export class KeycloakService {
 
   login() {
     this.keycloak.login();
+  }
+
+  // ✅ Método asíncrono para obtener perfil completo
+  getUserInfo(): Promise<any> {
+    return this.keycloak.loadUserProfile()
+      .then(profile => {
+        console.log('[Keycloak] User profile:', profile);
+        return profile;
+      })
+      .catch(err => {
+        console.error('[Keycloak] Error loading user profile:', err);
+        throw err;
+      });
+  }
+
+  // ✅ Método síncrono para obtener info básica del token
+  getUserInfoSync(): any {
+    if (!this.keycloak?.tokenParsed) {
+      return null;
+    }
+    
+    return {
+      sub: this.keycloak.tokenParsed['sub'],
+      preferred_username: this.keycloak.tokenParsed['preferred_username'],
+      email: this.keycloak.tokenParsed['email'],
+      name: this.keycloak.tokenParsed['name'],
+      roles: this.keycloak.tokenParsed['realm_access']?.['roles'] || []
+    };
   }
 
   logout() {
@@ -57,7 +80,6 @@ export class KeycloakService {
     return this.keycloak?.authenticated ?? false;
   }
 
-
   isLoggedIn(): boolean {
     return !!this.keycloak?.token;
   }
@@ -67,18 +89,16 @@ export class KeycloakService {
   }
 
   getRoles(): string[] {
-  return this.keycloak?.realmAccess?.roles ?? [];
+    return this.keycloak?.realmAccess?.roles ?? [];
   }
 
-  // Función para verificar si la lista de roles contiene un rol específico
   hasRole(role: string): boolean {
     const roles = this.getRole();
     return roles ? roles.includes(role) : false;
   }
 
-  // Función que trea el id del usuario autenticado
+  // ✅ Método síncrono para obtener el ID del usuario
   getUserId(): string | undefined {
     return this.keycloak?.tokenParsed?.['sub'];
   }
-
 }

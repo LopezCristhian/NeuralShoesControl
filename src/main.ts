@@ -16,6 +16,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(HttpClientModule),
     provideRouter(routes),
+    
     {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,

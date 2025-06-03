@@ -36,23 +36,40 @@
         <td>${{ product.precio }}</td>
         <td>{{ product.stock_total }}</td>
         <td>{{ product.marca.nombre || 'Sin marca' }}</td>
+        <!-- COLORES VISUALES MEJORADOS -->
         <td>
-          <span *ngFor="let color of product.colores; let last = last">
-            {{ color.nombre }}<span *ngIf="!last">, </span>
-          </span>
+          <div class="colors-container">
+            <span *ngFor="let color of product.colores" 
+                  class="color-dot" 
+                  [style.background-color]="getColorHex(color.nombre)"
+                  [title]="color.nombre">
+            </span>
+            <div class="colors-text" *ngIf="product.colores?.length">
+              <small class="text-muted">
+                {{ getColorNames(product.colores) }}
+              </small>
+            </div>
+          </div>
         </td>
         <td>
-          <span *ngFor="let talla of product.tallas; let last = last">
-            {{ talla.numero }}<span *ngIf="!last">, </span>
+          <span class="tallas-badges">
+            <span *ngFor="let talla of product.tallas" class="badge bg-light text-dark me-1">
+              {{ talla.numero }}
+            </span>
           </span>
         </td>
+        <!-- BOTONES MEJORADOS -->
         <td>
-          <button class="btn btn-warning btn-sm me-2" (click)="editProduct(product)">
-            <i class="bi bi-pencil"></i>
-          </button>
-          <button class="btn btn-danger btn-sm" (click)="deleteProduct(product)">
-            <i class="bi bi-trash"></i>
-          </button>
+          <div class="action-buttons">
+            <button class="btn btn-warning btn-sm me-2" (click)="editProduct(product)" title="Editar producto">
+              <i class="bi bi-pencil"></i>
+              <span class="btn-text">Editar</span>
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteProduct(product)" title="Eliminar producto">
+              <i class="bi bi-trash"></i>
+              <span class="btn-text">Eliminar</span>
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -141,36 +158,80 @@
             </div>
           </div>
 
-          <!-- Sección de imágenes solo en edición -->
-          <div class="mb-3" *ngIf="editMode">
-            <label class="form-label">Imágenes actuales del producto</label>
-            <div *ngIf="imagenesModal.length; else noImgsEdit">
-              <span *ngFor="let img of imagenesModal" class="me-2 d-inline-block position-relative">
-                <img [src]="img.imagen" alt="Imagen producto"
-                     style="height: 60px; margin: 0 5px; object-fit: contain;">
-                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
-                        style="transform: translate(30%, -30%);"
-                        (click)="eliminarImagenModal(img)">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </span>
+          <!-- SECCIÓN DE IMÁGENES PARA CREAR Y EDITAR -->
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="bi bi-image"></i> 
+              {{ editMode ? 'Gestionar imágenes del producto' : 'Agregar imágenes del producto' }}
+            </label>
+            
+            <!-- Mostrar imágenes actuales solo en edición -->
+            <div *ngIf="editMode && imagenesModal.length" class="mb-3">
+              <h6 class="text-muted">Imágenes actuales:</h6>
+              <div class="d-flex flex-wrap gap-2">
+                <span *ngFor="let img of imagenesModal" class="position-relative">
+                  <img [src]="img.imagen" alt="Imagen producto"
+                       style="height: 60px; width: 60px; object-fit: cover; border-radius: 8px;">
+                  <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                          style="transform: translate(50%, -50%); width: 20px; height: 20px; padding: 0; font-size: 10px;"
+                          (click)="eliminarImagenModal(img)">
+                    <i class="bi bi-x"></i>
+                  </button>
+                </span>
+              </div>
             </div>
-            <ng-template #noImgsEdit>
-              <div class="alert alert-warning">No hay imágenes para este producto.</div>
-            </ng-template>
-            <div class="mt-2">
-              <input type="file" (change)="onAddImageToModal($event)" accept="image/*" multiple>
-              <button type="button" class="btn btn-primary btn-sm ms-2"
-                      (click)="uploadImagesToProduct()" [disabled]="!nuevasImagenesModal.length">
-                Agregar imágenes
+
+            <!-- Input para seleccionar nuevas imágenes -->
+            <div class="mb-2">
+              <input type="file" 
+                     #fileInput
+                     class="form-control" 
+                     (change)="onAddImageToModal($event)" 
+                     accept="image/*" 
+                     multiple>
+              <div class="form-text">
+                <i class="bi bi-info-circle"></i> 
+                Selecciona una o más imágenes (JPG, PNG, GIF)
+              </div>
+            </div>
+
+            <!-- Mostrar archivos seleccionados -->
+            <div *ngIf="nuevasImagenesModal.length" class="mb-2">
+              <h6 class="text-muted">Archivos seleccionados:</h6>
+              <div class="d-flex flex-wrap gap-1">
+                <span *ngFor="let file of nuevasImagenesModal; let i = index" 
+                      class="badge bg-primary d-flex align-items-center gap-1">
+                  {{ file.name }}
+                  <button type="button" 
+                          class="btn-close btn-close-white" 
+                          style="font-size: 8px;"
+                          (click)="removeSelectedFile(i)"></button>
+                </span>
+              </div>
+            </div>
+
+            <!-- Botón para subir imágenes en modo edición -->
+            <div *ngIf="editMode">
+              <button type="button" 
+                      class="btn btn-outline-primary btn-sm"
+                      (click)="uploadImagesToProduct()" 
+                      [disabled]="!nuevasImagenesModal.length">
+                <i class="bi bi-cloud-upload"></i> Subir nuevas imágenes
               </button>
-              <span *ngFor="let file of nuevasImagenesModal" class="badge bg-secondary ms-1">{{ file.name }}</span>
+            </div>
+
+            <!-- Mensaje informativo para modo creación -->
+            <div *ngIf="!editMode && nuevasImagenesModal.length" class="alert alert-info">
+              <i class="bi bi-info-circle"></i> 
+              Las imágenes se subirán automáticamente al crear el producto.
             </div>
           </div>
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="hideDialog()">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="submit" class="btn btn-primary">
+              {{ editMode ? 'Actualizar' : 'Crear' }} Producto
+            </button>
           </div>
         </form>
       </div>

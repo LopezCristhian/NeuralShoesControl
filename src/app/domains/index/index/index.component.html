@@ -16,6 +16,9 @@
       <button type="button" class="btn btn-gradient btn-lg nasty-index" (click)="goToStore()">
         <i class="bi bi-shop"></i> Ver Tienda
       </button>
+      <button type="button" class="btn btn-gradient btn-lg nasty-index" *ngIf="hasRole('administrator')" (click)="goToOrders()">
+        <i class="bi bi-cart"></i> Pedidos
+      </button>
     </div>
   </div>
 </div>

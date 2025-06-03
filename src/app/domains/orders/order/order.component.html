@@ -1,1 +1,319 @@
-<p>order works!</p>
+<div class="container py-4">
+  <!-- ✅ Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="text-primary fw-bold mb-0">
+            <i class="bi bi-box-seam"></i> 
+            {{ isAdmin ? 'Gestión de Pedidos' : 'Mis Pedidos' }}
+          </h2>
+          <p class="text-muted mb-0">
+            {{ isAdmin ? 'Administra todos los pedidos del sistema' : 'Consulta el estado de tus pedidos' }}
+
+          </p>
+        </div>
+        
+        <!-- ✅ Filtros -->
+        <div class="d-flex gap-2 align-items-center">
+          <label class="form-label mb-0 me-2">Filtrar:</label>
+          <select 
+            class="form-select form-select-sm" 
+            [(ngModel)]="estadoSeleccionado"
+            style="width: auto;">
+            <option *ngFor="let estado of estadosFiltro" [value]="estado">
+              {{ estado }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Controles rápidos -->
+  <div class="row mb-3">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+      <div>
+        <button class="btn btn-outline-secondary btn-sm" (click)="refrescarPedidos()">
+          <i class="bi bi-arrow-clockwise"></i> Refrescar
+        </button>
+        <span class="ms-2 text-muted">Total: {{ pedidos.length }} pedidos</span>
+      </div>
+      
+  <div *ngIf="isAdmin" class="btn-group" role="group">
+    <button class="btn btn-info btn-sm" (click)="debugAdministrador()">
+      🐛 Debug
+    </button>
+    <button class="btn btn-success btn-sm" (click)="crearPedidosDePrueba()">
+      🧪 Crear Prueba
+    </button>
+    <button class="btn btn-warning btn-sm" (click)="getEstadisticas()">
+      📊 Stats
+    </button>
+    <button class="btn btn-danger btn-sm" (click)="crearPedidoPruebaSimple()">
+      ⚡ Prueba Directa
+    </button>
+    <!-- ✅ NUEVO BOTÓN -->
+    <button class="btn btn-secondary btn-sm" (click)="simularCliente()">
+      👤 Ver como Cliente
+    </button>
+  </div>
+
+<!-- ✅ Mostrar botón para volver a admin cuando está simulando cliente -->
+<div *ngIf="!isAdmin && hasAdminRole" class="btn-group" role="group">
+  <button class="btn btn-success btn-sm" (click)="volverAAdmin()">
+    👑 Volver a Admin
+  </button>
+</div>
+
+
+  
+  <!-- ✅ Loading -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+
+  </div>
+
+  <!-- ✅ Sin pedidos -->
+  <div *ngIf="!isLoading && pedidosFiltrados.length === 0" class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="text-center py-5">
+        <i class="bi bi-inbox display-1 text-muted mb-3"></i>
+        <h4 class="text-muted mb-3">No hay pedidos</h4>
+        <p class="text-muted mb-4">
+          {{ isAdmin ? 'No se encontraron pedidos en el sistema' : 'Aún no has realizado ningún pedido' }}
+        </p>
+        <div *ngIf="!isAdmin">
+          <a routerLink="/store" class="btn btn-primary">
+            <i class="bi bi-shop"></i> Ir a la Tienda
+          </a>
+        </div>
+        <div *ngIf="isAdmin">
+          <button class="btn btn-success" (click)="crearPedidosDePrueba()">
+            <i class="bi bi-plus-circle"></i> Crear Pedidos de Prueba
+          </button>
+          <button class="btn btn-danger ms-2" (click)="crearPedidoPruebaSimple()">
+            ⚡ Prueba Directa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Lista de pedidos -->
+  <div *ngIf="!isLoading && pedidosFiltrados.length > 0" class="row">
+    <div class="col-12">
+      <!-- ✅ Estadísticas rápidas para admin -->
+      <div *ngIf="isAdmin" class="row mb-4">
+        <div class="col-md-3">
+          <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+              <h5>{{ getConteoEstado('Pendiente') }}</h5>
+              <small>Pendientes</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-info text-white">
+            <div class="card-body text-center">
+              <h5>{{ getConteoEstado('Enviado') }}</h5>
+              <small>Enviados</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-success text-white">
+            <div class="card-body text-center">
+              <h5>{{ getConteoEstado('Entregado') }}</h5>
+              <small>Entregados</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-secondary text-white">
+            <div class="card-body text-center">
+              <h5>{{ pedidos.length }}</h5>
+              <small>Total</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ Tabla/Cards de pedidos -->
+      <div class="row">
+        <div *ngFor="let pedido of pedidosFiltrados; trackBy: trackByPedidoId" 
+             class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-header bg-light border-0 d-flex justify-content-between align-items-center">
+              <div>
+                <strong class="text-primary">#{{ pedido.id.substring(0, 8) }}...</strong>
+                <br>
+                <small class="text-muted">{{ formatearFecha(pedido.fecha_pedido) }}</small>
+              </div>
+              <span [class]="getEstadoClass(pedido.estado)">{{ pedido.estado }}</span>
+            </div>
+            
+            <div class="card-body">
+              <!-- ✅ Info del cliente (solo para admin) -->
+              <div *ngIf="isAdmin" class="mb-3">
+                <h6 class="card-subtitle text-muted mb-1">Cliente:</h6>
+                <p class="mb-1">{{ pedido.cliente.nombre }}</p>
+                <small class="text-muted">{{ pedido.cliente.correo }}</small>
+              </div>
+              
+              <!-- ✅ Resumen del pedido -->
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <span>Productos:</span>
+                  <strong>{{ getTotalItems(pedido) }}</strong>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Total:</span>
+                  <strong class="text-success">${{ pedido.total | number:'1.0-0' }}</strong>
+                </div>
+              </div>
+              
+              <!-- ✅ Items del pedido (resumido) -->
+              <div class="mb-3">
+                <h6 class="card-subtitle text-muted mb-2">Items:</h6>
+                <div class="item-list">
+                  <div *ngFor="let item of pedido.items.slice(0, 2)" class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="text-truncate me-2">{{ item.variacion?.producto?.nombre || 'Producto' }}</span>
+                    <small class="text-muted">{{ item.cantidad }}x</small>
+                  </div>
+                  <div *ngIf="pedido.items.length > 2" class="text-muted">
+                    <small>+ {{ pedido.items.length - 2 }} productos más</small>
+                  </div>
+                  <div *ngIf="pedido.items.length === 0" class="text-muted">
+                    <small>Sin productos especificados</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- ✅ Acciones del pedido -->
+            <div class="card-footer bg-transparent border-0">
+              <div class="d-grid gap-2">
+                <!-- ✅ Botón ver detalles -->
+                <button 
+                  class="btn btn-outline-primary btn-sm" 
+                  type="button"
+                  (click)="verDetallePedido(pedido.id)">
+                  <i class="bi bi-eye"></i> Ver Detalles
+                </button>
+                
+                <!-- ✅ Cambiar estado SIMPLIFICADO (sin dropdown complejo) -->
+                <div *ngIf="isAdmin" class="btn-group-vertical">
+                  <small class="text-muted mb-1">Cambiar estado:</small>
+                  <div class="btn-group btn-group-sm" role="group">
+                    <button 
+                      type="button"
+                      class="btn btn-outline-warning"
+                      [class.active]="pedido.estado === 'Pendiente'"
+                      (click)="cambiarEstadoPedido(pedido.id, 'Pendiente')"
+                      title="Pendiente">
+                      ⏳
+                    </button>
+                    <button 
+                      type="button"
+                      class="btn btn-outline-info"
+                      [class.active]="pedido.estado === 'Enviado'"
+                      (click)="cambiarEstadoPedido(pedido.id, 'Enviado')"
+                      title="Enviado">
+                      🚚
+                    </button>
+                    <button 
+                      type="button"
+                      class="btn btn-outline-success"
+                      [class.active]="pedido.estado === 'Entregado'"
+                      (click)="cambiarEstadoPedido(pedido.id, 'Entregado')"
+                      title="Entregado">
+                      ✅
+                    </button>
+                    <button 
+                      type="button"
+                      class="btn btn-outline-danger"
+                      [class.active]="pedido.estado === 'Cancelado'"
+                      (click)="cambiarEstadoPedido(pedido.id, 'Cancelado')"
+                      title="Cancelado">
+                      ❌
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Panel de herramientas de administrador -->
+  <div *ngIf="isAdmin" class="row mt-5">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">🔧 Herramientas de Administrador</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>📦 Gestión de Pedidos:</h6>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button class="btn btn-info btn-sm" (click)="debugAdministrador()">
+                  🐛 Debug Completo
+                </button>
+                <button class="btn btn-success btn-sm" (click)="crearPedidosDePrueba()">
+                  🧪 Crear Pedidos de Prueba
+                </button>
+                <button class="btn btn-warning btn-sm" (click)="refrescarPedidos()">
+                  🔄 Refrescar
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="crearPedidoPruebaSimple()">
+                  ⚡ Prueba Directa
+                </button>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <h6>💾 Backup y Limpieza:</h6>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button class="btn btn-primary btn-sm" (click)="exportarPedidos()">
+                  📥 Exportar
+                </button>
+                <button class="btn btn-secondary btn-sm" (click)="importarPedidos()">
+                  📤 Importar
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="limpiarTodosPedidos()">
+                  🗑️ Limpiar Todos
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- ✅ Estadísticas rápidas -->
+          <div class="p-3 bg-light rounded">
+            <div class="row">
+              <div class="col-6 col-md-3">
+                <strong>Total:</strong> {{ pedidos.length }}
+              </div>
+              <div class="col-6 col-md-3">
+                <strong>Pendientes:</strong> {{ getConteoEstado('Pendiente') }}
+              </div>
+              <div class="col-6 col-md-3">
+                <strong>Enviados:</strong> {{ getConteoEstado('Enviado') }}
+              </div>
+              <div class="col-6 col-md-3">
+                <strong>Entregados:</strong> {{ getConteoEstado('Entregado') }}
+              </div>
+            </div>
+            <button class="btn btn-sm btn-outline-info mt-2" (click)="getEstadisticas()">
+              📊 Ver Estadísticas Completas
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

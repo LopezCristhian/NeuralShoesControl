@@ -9,14 +9,23 @@ import { authRoleGuard } from './guards/auth.guard';
 import { CartComponent } from './domains/products/cart/cart.component';
 
 
+
 export const routes: Routes = [
   { path: '', component: IndexComponent },
+  { path: 'domains/products/cart', component: CartComponent },
+
   { path: 'productos', component: ProductComponent, canActivate: [authRoleGuard], data: { roles: ['administrator'] } },
   { path: 'admin-demo', component: AdminDemoComponent },
   { path: 'categorias', component: CategoryComponent, canActivate: [authRoleGuard], data: { roles: ['administrator'] } },
   { path: 'marcas', component: BrandComponent, canActivate: [authRoleGuard], data: { roles: ['administrator'] } },
   { path: 'tienda', component: StoreComponent},// canActivate: [authGuard] },
   { path: 'administracion', component: IndexComponent, canActivate: [authRoleGuard], data: { roles: ['administrator'] } },
-  { path: 'carrito', component: CartComponent }
+  { path: 'cart', component: CartComponent },
+  { path: 'carrito', component: CartComponent },
+  {
+    path: 'orders',
+    loadComponent: () => import('./domains/orders/order/order.component').then(m => m.OrderComponent)
+  },
+  
 
 ];

@@ -15,9 +15,10 @@
         <li class="dropdown">
           <a href="/administracion" *ngIf="hasRole('administrator')">Administración </a>
         </li>  
-        <!-- <li><a routerLink="/tienda">Inicio</a></li> -->
+        <!-- Agregar enlace a la tienda -->
+        <li><a routerLink="/store">Tienda</a></li>
         <li class="dropdown">
-          <a >Categorías</a>
+          <a>Categorías</a>
           <ul class="dropdown-menu">
             <li><a routerLink="/domains/brands">Nike</a></li>
             <li><a routerLink="/domains/brands">Adidas</a></li>
@@ -35,22 +36,38 @@
         <button type="submit">🔍</button>
       </form>
 
-    <a routerLink="/domains/products/cart" class="icon-link">
-      🛒 <span class="badge">{{ cartCount }}</span>
-    </a>
+      <!-- ✅ Carrito SOLO visible para usuarios NO administradores -->
+      <a *ngIf="!hasRole('administrator')" 
+         routerLink="/cart" 
+         class="icon-link cart-link" 
+         title="Ver carrito">
+        🛒 
+        <span class="badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+        <span class="cart-text" *ngIf="cartCount === 0">Carrito</span>
+      </a>
+
+      <!-- ✅ Para admins, mostrar link al panel admin en lugar del carrito -->
+      <a *ngIf="hasRole('administrator')" 
+         routerLink="/admin" 
+         class="icon-link admin-link" 
+         title="Panel de Administración">
+        ⚙️ <span class="admin-text">Admin</span>
+      </a>
 
       <a routerLink="/perfil" class="icon-link">
         👤 <span *ngIf="username" class="username">Bienvenido, {{ username }}</span>
       </a>
+      
       <!-- Botón de alternar tema oscuro/claro -->
       <button class="btn btn-darkmode" type="button" (click)="toggleDarkTheme()" title="Alternar modo oscuro">
         🌓
       </button>
+      
       <!-- Botón de iniciar sesión -->
       <button class="btn btn-primary btn-sm" *ngIf="!isLoggedInUser()" (click)="login()">Iniciar Sesión</button>
+      
       <!-- Botón de cerrar sesión -->
       <button class="btn btn-secondary btn-sm" *ngIf="username" (click)="logout()">Cerrar Sesión</button>
-      <!-- <button class="btn btn-primary btn-sm" *ngIf="username">Bienvenido, {{ username }}</button> -->
     </div>
   </div>
 </header>

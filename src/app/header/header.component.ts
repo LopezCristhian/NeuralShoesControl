@@ -1,26 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KeycloakService } from '../services/keycloak.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { CartStateService } from '../services/cart-state.service'; // Importa el servicio
+import { Router, RouterLink } from '@angular/router';
+import { CartStateService } from '../services/cart-state.service';
 import { ItemCarrito } from '../models/item_carrito.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {
-  keycloakService: any;
+export class HeaderComponent implements OnInit, OnDestroy {
   username: string | undefined;
   cartCount: number = 0;
+  private subscription = new Subscription();
 
   constructor(
     private router: Router,
     private keycloak: KeycloakService,
-    private cartState: CartStateService // Inyecta el servicio
+    private cartState: CartStateService
   ) {}
   
   ngOnInit() {
@@ -32,12 +33,16 @@ export class HeaderComponent {
       document.body.classList.remove('dark-theme');
     }
 
-
-    
-
-    this.cartState.items$.subscribe(items => {
-      this.cartCount = items.reduce((sum, item) => sum + item.cantidad, 0);
-    });
+    // ✅ Solo suscribirse al carrito si NO es administrador
+    if (!this.hasRole('administrator')) {
+      const cartSubscription = this.cartState.items$.subscribe(items => {
+        this.cartCount = items.reduce((sum, item) => sum + item.cantidad, 0);
+      });
+      this.subscription.add(cartSubscription);
+    } else {
+      // ✅ Los admins no tienen carrito
+      this.cartCount = 0;
+    }
 
     if (this.keycloak.isLoggedInUser()) {
       this.username = this.keycloak.getUsername();
@@ -45,16 +50,27 @@ export class HeaderComponent {
     }
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  // ✅ Método para navegar al carrito - Solo para no-admins
+  goToCart() {
+    if (!this.hasRole('administrator')) {
+      this.router.navigate(['/cart']);
+    } else {
+      console.warn('Los administradores no pueden acceder al carrito');
+      this.router.navigate(['/admin']); // Redirigir al panel admin
+    }
+  }
 
   toggleDarkTheme(): void {
     const isDark = document.body.classList.toggle('dark-theme');
-    // Guardar preferencia en localStorage
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   }
   
   login() {
     this.keycloak.login();
-    //console.log('Login button clicked');
   }
 
   logout() {
@@ -91,5 +107,4 @@ export class HeaderComponent {
     console.log('UserId:', this.keycloak.getUserId());
     return this.keycloak.getUserId();
   }
-
 }

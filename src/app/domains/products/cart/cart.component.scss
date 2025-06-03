@@ -1,64 +1,311 @@
 .container {
-  max-width: 600px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 20px;
 }
 
 h2 {
   letter-spacing: 1px;
   font-weight: 700;
   text-shadow: 0 2px 8px #e0e0e0;
+  margin-bottom: 2rem;
 }
 
-.list-group-item {
+// ✅ Estilos mejorados para las tarjetas de productos
+.card {
+  transition: all 0.3s ease;
   border: none;
-  border-radius: 0.5rem;
-  margin-bottom: 0.5rem;
-  background: #f8fafc;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-  transition: background 0.2s;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+  
   &:hover {
-    background: #e9ecef;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   }
 }
 
+.card-body {
+  padding: 1.5rem;
+}
+
+// ✅ Mejorar espaciado entre columnas
+.row.align-items-center > div {
+  padding: 0.5rem;
+}
+
+// ✅ Estilos para las imágenes de productos
+.product-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.placeholder-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-size: 1.5rem;
+}
+
+// ✅ Mejorar los badges
 .badge.bg-info {
   font-size: 0.85em;
-  margin-right: 0.3em;
+  margin-right: 0.5em;
+  padding: 0.4em 0.8em;
+  border-radius: 20px;
 }
 
 .badge.bg-secondary {
   font-size: 0.85em;
+  padding: 0.4em 0.8em;
+  border-radius: 20px;
 }
 
-.fw-bold {
-  font-size: 1.2em;
+// ✅ Controles de cantidad con botones RECTANGULARES bien definidos
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  
+  .btn-outline-secondary {
+    width: 45px; // ✅ Más ancho para mejor visibilidad
+    height: 40px; // ✅ Más alto para mejor clickeo
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 8px; // ✅ Bordes redondeados rectangulares
+    border: 2px solid #007bff; // ✅ Color azul más atractivo
+    background: white;
+    transition: all 0.2s ease;
+    font-size: 1.2rem; // ✅ Íconos más grandes
+    font-weight: bold;
+    color: #007bff;
+    
+    &:hover {
+      background-color: #007bff;
+      color: white;
+      transform: translateY(-1px); // ✅ Efecto más sutil
+      border-color: #007bff;
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    }
+    
+    &:active {
+      transform: translateY(0); // ✅ Efecto de presión
+      box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+    }
+    
+    // ✅ Asegurar que los íconos se vean bien
+    i {
+      font-size: 1.1rem;
+      line-height: 1;
+      font-weight: bold;
+    }
+  }
+  
+  .quantity-number {
+    font-weight: bold;
+    font-size: 1.3rem; // ✅ Número más grande y visible
+    min-width: 50px; // ✅ Más espacio para números grandes
+    text-align: center;
+    padding: 0.6rem 0.8rem;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+    color: #495057;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  }
 }
 
+// ✅ Botón de eliminar mejorado
+.btn-delete {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 2px solid #dc3545;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// ✅ Resumen del carrito mejorado
+.cart-summary {
+  .card-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border-radius: 12px 12px 0 0;
+    border: none;
+    padding: 1.2rem 1.5rem;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+  }
+}
+
+// ✅ Botones principales mejorados
 .btn-success {
   font-weight: 600;
   letter-spacing: 1px;
-  box-shadow: 0 2px 8px #19875433;
-  transition: background 0.2s, box-shadow 0.2s;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+  transition: all 0.3s ease;
+  
   &:hover {
     background: #157347;
-    box-shadow: 0 4px 16px #19875455;
+    box-shadow: 0 6px 20px rgba(25, 135, 84, 0.4);
+    transform: translateY(-2px);
   }
 }
 
-.alert-info {
-  background: #e3f2fd;
-  color: #1976d2;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1.1em;
-  margin-top: 2em;
+.btn-outline-danger {
+  border-radius: 25px;
+  padding: 0.8rem 1.5rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+  }
 }
 
-@media (max-width: 600px) {
+// ✅ Carrito vacío mejorado
+.empty-cart {
+  text-align: center;
+  padding: 4rem 2rem;
+  
+  .display-1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+  
+  h4 {
+    color: #6c757d;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .btn-primary {
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+    }
+  }
+}
+
+.sticky-top {
+  top: 20px;
+}
+
+// ✅ RESPONSIVE UNIFICADO Y OPTIMIZADO
+@media (max-width: 768px) {
   .container {
-    padding: 0 0.5em;
+    padding: 15px;
   }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-body .row > div {
+    margin-bottom: 1rem;
+  }
+  
+  .product-image,
+  .placeholder-image {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .quantity-controls {
+    .btn-outline-secondary {
+      width: 38px; // ✅ Ajustado para móvil
+      height: 35px;
+      font-size: 1rem;
+    }
+    
+    .quantity-number {
+      font-size: 1.1rem;
+      min-width: 40px;
+      padding: 0.4rem 0.6rem;
+    }
+  }
+  
   h2 {
-    font-size: 1.3em;
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .card-body .row {
+    text-align: center;
+  }
+  
+  .card-body .row > div {
+    margin-bottom: 1.5rem;
+  }
+  
+  .quantity-controls {
+    gap: 0.3rem;
+    
+    .btn-outline-secondary {
+      width: 35px;
+      height: 32px;
+      font-size: 0.9rem;
+    }
+    
+    .quantity-number {
+      font-size: 1rem;
+      min-width: 35px;
+      padding: 0.3rem 0.5rem;
+    }
+  }
+  
+  .btn-delete {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
   }
 }

@@ -40,6 +40,9 @@ export class IndexComponent {
   goToStore() {
     this.router.navigate(['/tienda']);
   }
+  goToOrders() {
+    this.router.navigate(['/orders']);
+  }
 
   hasRole(role: string): boolean {
     console.log('Contiene el rol:', role, this.keycloak.hasRole(role), '!!!');

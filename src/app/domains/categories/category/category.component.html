@@ -1,19 +1,88 @@
 <div class="container mt-4">
-  <h2>Categorías</h2>
-  <table class="table table-striped table-bordered">
-    <thead class="table-primary">
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Descripción</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let cat of categories">
-        <td>{{ cat.id }}</td>
-        <td>{{ cat.nombre }}</td>
-        <td>{{ cat.descripcion }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Gestión de Categorías</h2>
+    <button class="btn btn-primary" (click)="openNew()">
+      <i class="bi bi-plus"></i> Agregar Categoría
+    </button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-primary">
+        <tr>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of categories">
+          <td>{{ category.nombre }}</td>
+          <td>{{ category.descripcion || 'Sin descripción' }}</td>
+          <td>
+            <button class="btn btn-warning btn-sm me-2" (click)="editCategory(category)">
+              <i class="bi bi-pencil"></i> Editar
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteCategory(category)">
+              <i class="bi bi-trash"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="categories.length === 0">
+          <td colspan="4" class="text-center text-muted">
+            No hay categorías registradas
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Bootstrap para crear/editar categoría -->
+<div class="modal fade show" tabindex="-1" 
+     [ngStyle]="{'display': categoryDialog ? 'block' : 'none', 'background': categoryDialog ? 'rgba(0,0,0,0.5)' : 'none'}" 
+     [class.show]="categoryDialog" [class.d-block]="categoryDialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">{{ categoryDialogTitle }}</h5>
+        <button type="button" class="btn-close" (click)="hideDialog()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="saveCategory()">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre *</label>
+            <input 
+              type="text" 
+              id="nombre"
+              class="form-control" 
+              [(ngModel)]="selectedCategory.nombre" 
+              name="nombre" 
+              required
+              placeholder="Ingrese el nombre de la categoría">
+          </div>
+          
+          <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea 
+              id="descripcion"
+              class="form-control" 
+              rows="3"
+              [(ngModel)]="selectedCategory.descripcion" 
+              name="descripcion"
+              placeholder="Ingrese una descripción (opcional)"></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="hideDialog()">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="!selectedCategory.nombre?.trim()">
+              {{ editMode ? 'Actualizar' : 'Crear' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

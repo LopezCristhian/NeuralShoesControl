@@ -1,0 +1,28 @@
+.table {
+  th {
+    background-color: var(--bs-primary);
+    color: white;
+    font-weight: 600;
+  }
+}
+
+.btn {
+  font-size: 0.875rem;
+  
+  i {
+    margin-right: 0.25rem;
+  }
+}
+
+.modal-header {
+  border-bottom: none;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+}
+
+.text-muted {
+  font-style: italic;
+}
